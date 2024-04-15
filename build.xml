@@ -1,16 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="FinanFX" default="default" basedir=".">
+<project name="FinanFX" default="default" basedir="." xmlns:liquibase="antlib:liquibase.integration.ant">
     <description>Builds, tests, and runs the project FinanFX.</description>
     <import file="nbproject/build-impl.xml"/>
- 
-    <property name="sqlserver.classpath" location="lib/mssql-jdbc-12.6.1.jre11.jar"/>
     
-    <classpath id="compile.classpath">
+    <!-- Define properties -->
+    <property name="sqlserver.classpath" location="lib/mssql-jdbc-12.6.1.jre11.jar"/>
+    <property name="liquibase-core.classpath" location="lib/liquibase-core-4.27.0.jar"/>
+    
+    <!-- Define classpath -->
+    <path id="compile.classpath">
         <pathelement location="${libs.**:*}"/> 
         <pathelement location="${sqlserver.classpath}"/>
-    </classpath>
- 
+    </path>
+    
+    <!-- Target to compile Java code -->
     <target name="compile">
         <javac srcdir="src/java" destdir="build/classes" classpathref="compile.classpath"/>
     </target>
+    
+     <target name="migrate-db">
+        <java classname="liquibase.integration.commandline.Main" classpathref="classpath">
+            <arg value="--changeLogFile=migrations/changelog.xml"/>
+            <arg value="--url=jdbc:your_database_connection_string"/>
+            <arg value="--username=your_username"/>
+            <arg value="--password=your_password"/>
+            <arg value="update"/>
+        </java>
+    </target>
+    
 </project>
