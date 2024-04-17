@@ -3,7 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group name="Group 20240413-11:20:14">
-            <file>file:/C:/Users/raule/OneDrive/Documentos/Utec/ProgramacionIII/FinanFX/.gitignore</file>
+            <file>file:/C:/Users/raule/OneDrive/Documentos/Utec/ProgramacionIII/FinanFX/src/finanfx/data/DatabaseConfig.java</file>
+            <file>file:/C:/Users/raule/OneDrive/Documentos/Utec/ProgramacionIII/FinanFX/src/finanfx/data/DatabaseConnection.java</file>
+            <file>file:/C:/Users/raule/OneDrive/Documentos/Utec/ProgramacionIII/FinanFX/src/finanfx/models/User.java</file>
+            <file>file:/C:/Users/raule/OneDrive/Documentos/Utec/ProgramacionIII/FinanFX/src/finanfx/dao/Login.java</file>
         </group>
     </open-files>
 </project-private>
