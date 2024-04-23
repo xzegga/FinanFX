@@ -5,6 +5,9 @@
 package Formularios;
 
 import java.awt.Dimension;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 
@@ -23,7 +26,7 @@ public class frmMenu extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
     }
     
-    public void Apagado()
+    public void Apagado() throws SQLException
     {
         frmCuentas cuenta = new frmCuentas();
         cuenta.setVisible(false);
@@ -163,9 +166,22 @@ public class frmMenu extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnTransaccionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTransaccionesActionPerformed
-        // TODO add your handling code here:
-        Apagado();
-        frmTransacciones Transaccion = new frmTransacciones();
+        try
+        {
+            // TODO add your handling code here:
+            Apagado();
+        } catch (SQLException ex)
+        {
+            Logger.getLogger(frmMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        frmTransacciones Transaccion = null;
+        try
+        {
+            Transaccion = new frmTransacciones();
+        } catch (SQLException ex)
+        {
+            Logger.getLogger(frmMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
         content.add(Transaccion);
         Dimension tCont = content.getSize();
         Dimension tiFrame = Transaccion.getSize();
@@ -175,8 +191,14 @@ public class frmMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_btnTransaccionesActionPerformed
 
     private void btnPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPerfilActionPerformed
-        // TODO add your handling code here:
-        Apagado();
+        try
+        {
+            // TODO add your handling code here:
+            Apagado();
+        } catch (SQLException ex)
+        {
+            Logger.getLogger(frmMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
         frmPerfil Info= new frmPerfil();
         content.add(Info);
         Dimension tCont = content.getSize();
@@ -187,8 +209,14 @@ public class frmMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_btnPerfilActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        // TODO add your handling code here:
-        Apagado();
+        try
+        {
+            // TODO add your handling code here:
+            Apagado();
+        } catch (SQLException ex)
+        {
+            Logger.getLogger(frmMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
         frmCuentas Banco = new frmCuentas();
         content.add(Banco);
         Dimension tCont = content.getSize();
@@ -199,8 +227,14 @@ public class frmMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void btnNotasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNotasActionPerformed
-        // TODO add your handling code here:
-        Apagado();
+        try
+        {
+            // TODO add your handling code here:
+            Apagado();
+        } catch (SQLException ex)
+        {
+            Logger.getLogger(frmMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
         frmNotas note = new frmNotas();
         content.add(note);
         Dimension tCont = content.getSize();
@@ -211,8 +245,14 @@ public class frmMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_btnNotasActionPerformed
 
     private void btnPresupuestoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPresupuestoActionPerformed
-        // TODO add your handling code here:
-        Apagado();
+        try
+        {
+            // TODO add your handling code here:
+            Apagado();
+        } catch (SQLException ex)
+        {
+            Logger.getLogger(frmMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
         frmPresupuestos Presupuestos = new frmPresupuestos();
         content.add(Presupuestos);
         Dimension tCont = content.getSize();
@@ -223,8 +263,14 @@ public class frmMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_btnPresupuestoActionPerformed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
-        // TODO add your handling code here:
-        Apagado();
+        try
+        {
+            // TODO add your handling code here:
+            Apagado();
+        } catch (SQLException ex)
+        {
+            Logger.getLogger(frmMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
         frmPresupuestos Presupuestos = new frmPresupuestos();
         content.add(Presupuestos);
         Dimension tCont = content.getSize();
