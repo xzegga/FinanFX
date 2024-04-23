@@ -21,6 +21,8 @@ public class frmLogin extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);//Para centrar el form
     
     }
+    
+    static int Control = 0; 
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -127,6 +129,7 @@ public class frmLogin extends javax.swing.JFrame {
                 frmMenu mnu = new frmMenu();
                 mnu.setVisible(true);
                 this.hide();
+                Control = 1;
 
             }else
             {

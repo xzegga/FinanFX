@@ -48,11 +48,11 @@ public class frmClave extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtCorreo);
-        txtCorreo.setBounds(150, 90, 240, 22);
+        txtCorreo.setBounds(150, 90, 200, 22);
 
         jLabel1.setText("Correo electronico");
         getContentPane().add(jLabel1);
-        jLabel1.setBounds(20, 90, 120, 16);
+        jLabel1.setBounds(30, 90, 120, 16);
 
         txtClave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -60,13 +60,13 @@ public class frmClave extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtClave);
-        txtClave.setBounds(150, 130, 240, 22);
+        txtClave.setBounds(150, 130, 200, 22);
         getContentPane().add(txtCambiarClave);
-        txtCambiarClave.setBounds(150, 170, 240, 22);
+        txtCambiarClave.setBounds(150, 170, 200, 22);
 
         jLabel2.setText("Nueva contraseña");
         getContentPane().add(jLabel2);
-        jLabel2.setBounds(20, 130, 120, 16);
+        jLabel2.setBounds(30, 130, 120, 16);
 
         jLabel3.setText("Confirmar Contraseña");
         getContentPane().add(jLabel3);
@@ -79,7 +79,7 @@ public class frmClave extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnConfirmar);
-        btnConfirmar.setBounds(150, 210, 110, 23);
+        btnConfirmar.setBounds(150, 200, 90, 23);
 
         btnRegresar.setText("Regresar");
         btnRegresar.addActionListener(new java.awt.event.ActionListener() {
@@ -88,12 +88,12 @@ public class frmClave extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnRegresar);
-        btnRegresar.setBounds(280, 210, 110, 23);
+        btnRegresar.setBounds(260, 200, 90, 23);
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel4.setText("Recuperar Contraseña");
         getContentPane().add(jLabel4);
-        jLabel4.setBounds(131, 34, 262, 33);
+        jLabel4.setBounds(90, 40, 262, 33);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

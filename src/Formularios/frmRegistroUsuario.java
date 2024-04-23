@@ -59,14 +59,16 @@ public class frmRegistroUsuario extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTable1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMinimumSize(new java.awt.Dimension(450, 450));
+        setAutoRequestFocus(false);
+        setBackground(new java.awt.Color(153, 255, 204));
+        setMinimumSize(new java.awt.Dimension(550, 470));
         setResizable(false);
         getContentPane().setLayout(null);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel1.setText("Registro");
         getContentPane().add(jLabel1);
-        jLabel1.setBounds(170, 32, 87, 32);
+        jLabel1.setBounds(140, 40, 87, 32);
 
         txtNombres.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
