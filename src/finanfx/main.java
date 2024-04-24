@@ -1,5 +1,5 @@
 package finanfx;
-import Formularios.frmLogin;
+import finanfx.forms.frmLogin;
 //import java.sql.SQLException;
 //import finanfx.data.DatabaseConnection;
 
