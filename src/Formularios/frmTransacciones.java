@@ -30,7 +30,7 @@ public class frmTransacciones extends javax.swing.JPanel {
      */
     public frmTransacciones() throws SQLException {
         initComponents();
-        saveTransaction();
+       
     }
     
     private void saveTransaction() throws SQLException{
