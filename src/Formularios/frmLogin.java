@@ -54,7 +54,7 @@ public class frmLogin extends javax.swing.JFrame {
         getContentPane().add(jLabel1);
         jLabel1.setBounds(160, 10, 170, 32);
         getContentPane().add(txtUsuario);
-        txtUsuario.setBounds(130, 60, 198, 22);
+        txtUsuario.setBounds(130, 60, 198, 26);
 
         jLabel2.setText("Usuario");
         getContentPane().add(jLabel2);
@@ -66,7 +66,7 @@ public class frmLogin extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtClave);
-        txtClave.setBounds(130, 100, 198, 22);
+        txtClave.setBounds(130, 100, 198, 26);
 
         jLabel3.setText("Contraseña");
         getContentPane().add(jLabel3);
@@ -97,7 +97,7 @@ public class frmLogin extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnAcceder);
-        btnAcceder.setBounds(130, 143, 95, 23);
+        btnAcceder.setBounds(130, 143, 95, 27);
 
         btnSalir.setText("Salir");
         btnSalir.addActionListener(new java.awt.event.ActionListener() {
@@ -106,7 +106,7 @@ public class frmLogin extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnSalir);
-        btnSalir.setBounds(231, 143, 97, 23);
+        btnSalir.setBounds(231, 143, 97, 27);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -130,6 +130,7 @@ public class frmLogin extends javax.swing.JFrame {
                 mnu.setVisible(true);
                 this.hide();
                 Control = 1;
+                
 
             }else
             {
@@ -195,7 +196,7 @@ public class frmLogin extends javax.swing.JFrame {
             }
         });
     }
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAcceder;
     private javax.swing.JButton btnSalir;

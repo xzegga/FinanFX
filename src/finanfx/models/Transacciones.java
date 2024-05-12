@@ -3,6 +3,7 @@ package finanfx.models;
 import java.sql.Date;
 
 public class Transacciones {
+    private int ID_Transaccion;
     private int ID_Usuario;
     private String Tipo_Transaccion;
     private double Cantidad;
@@ -11,7 +12,8 @@ public class Transacciones {
     private String Descripcion;
     private String Forma_Pago;
 
-    public Transacciones(int ID_Usuario, String Tipo_Transaccion, double Cantidad, Date Fecha, String Categoria, String Descripcion, String Forma_Pago) {
+    public Transacciones(int ID_Transaccion, int ID_Usuario, String Tipo_Transaccion, double Cantidad, Date Fecha, String Categoria, String Descripcion, String Forma_Pago) {
+        this.ID_Transaccion = ID_Transaccion;
         this.ID_Usuario = ID_Usuario;
         this.Tipo_Transaccion = Tipo_Transaccion;
         this.Cantidad = Cantidad;
@@ -19,6 +21,10 @@ public class Transacciones {
         this.Categoria = Categoria;
         this.Descripcion = Descripcion;
         this.Forma_Pago = Forma_Pago;
+    }
+
+    public int getID_Transaccion() {
+        return ID_Transaccion;
     }
 
     public int getID_Usuario() {
@@ -49,6 +55,10 @@ public class Transacciones {
         return Forma_Pago;
     }
 
+    public void setID_Transaccion(int ID_Transaccion) {
+        this.ID_Transaccion = ID_Transaccion;
+    }
+
     public void setID_Usuario(int ID_Usuario) {
         this.ID_Usuario = ID_Usuario;
     }
@@ -76,6 +86,6 @@ public class Transacciones {
     public void setForma_Pago(String Forma_Pago) {
         this.Forma_Pago = Forma_Pago;
     }
-    
+
     
 }

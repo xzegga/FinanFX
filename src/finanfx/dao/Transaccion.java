@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.CallableStatement;
 import java.sql.SQLException;
 import finanfx.models.Transacciones;
+import java.util.ArrayList;
 
 public class Transaccion {
     public static void saveTransaction(Transacciones transactions)throws SQLException{
@@ -67,54 +68,51 @@ public class Transaccion {
         }
     }
     
-    public static Transacciones[] listTransactions(int ID_Usuario) throws SQLException{
+    public static Transacciones[] listTransactions(int ID_Transaccion) throws SQLException {
         Connection conn = null;
         CallableStatement stmt = null;
         ResultSet rs = null;
-        Transacciones[] transactionsArray = null;
-        
-        try{
+        ArrayList<Transacciones> transactionList = new ArrayList<>();
+
+        try
+        {
             conn = DatabaseConnection.getConnection();
             String sql = "EXEC SP_ListarTransacciones ?";
             stmt = conn.prepareCall(sql);
-            stmt.setInt(1, ID_Usuario);
-            
+            stmt.setInt(1, ID_Transaccion);
             rs = stmt.executeQuery();
-            
-            int rowCount = 0;
-            if(rs.last()){
-                rowCount = rs.getRow();
-                rs.beforeFirst();
-            }
-            transactionsArray = new Transacciones[rowCount];
-            
-            int index = 0;
-            while(rs.next()){
+
+            while (rs.next())
+            {
                 int idTransaction = rs.getInt("ID_Transaccion");
+                int idUsuario = rs.getInt("ID_Usuario");
                 String transactionType = rs.getString("Tipo_Transaccion");
                 double amount = rs.getDouble("Cantidad");
-                Date Fecha = rs.getDate("Fecha");
+                Date fecha = rs.getDate("Fecha");
                 String categories = rs.getString("Categoria");
                 String description = rs.getString("Descripcion");
-                String paymentMethod =  rs.getString("Forma_Pago");
-                
-                Transacciones transactions = new Transacciones(ID_Usuario, transactionType, amount, Fecha, categories, description, description);
-                
-                transactionsArray[index] = transactions;
-                index++;
+                String paymentMethod = rs.getString("Forma_Pago");
+
+                Transacciones transaction = new Transacciones(idTransaction,idUsuario, transactionType, amount, fecha, categories, description, paymentMethod);
+                transactionList.add(transaction);
             }
-        }finally{
-            if(rs != null){
+        } finally
+        {
+            if (rs != null)
+            {
                 rs.close();
             }
-            if(stmt != null){
+            if (stmt != null)
+            {
                 stmt.close();
             }
-            if(conn != null){
+            if (conn != null)
+            {
                 conn.close();
             }
         }
-        return transactionsArray;
+
+        return transactionList.toArray(new Transacciones[transactionList.size()]);
     }
     
     public static void deleteTransactions(int ID_Transaccion) throws SQLException{

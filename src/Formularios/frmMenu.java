@@ -57,7 +57,7 @@ public class frmMenu extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        lblHello = new javax.swing.JLabel();
         content = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu5 = new javax.swing.JMenu();
@@ -79,9 +79,9 @@ public class frmMenu extends javax.swing.JFrame {
         setResizable(false);
         getContentPane().setLayout(null);
 
-        jLabel1.setText("Bienvenido (Nombre de usuario)");
-        getContentPane().add(jLabel1);
-        jLabel1.setBounds(328, 415, 172, 16);
+        lblHello.setText("Bienvenido (Nombre de usuario)");
+        getContentPane().add(lblHello);
+        lblHello.setBounds(328, 415, 172, 16);
 
         content.setBackground(new java.awt.Color(255, 255, 204));
         getContentPane().add(content);
@@ -314,6 +314,13 @@ public class frmMenu extends javax.swing.JFrame {
             }
         });
     }
+    
+    private String UserName;
+    public frmMenu(String Username){
+        initComponents();
+        this.UserName = Username;
+        lblHello.setText("Bienvenido, "+Username+" !");
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem btnNotas;
@@ -321,7 +328,6 @@ public class frmMenu extends javax.swing.JFrame {
     private javax.swing.JMenuItem btnPresupuesto;
     private javax.swing.JMenuItem btnTransacciones;
     private javax.swing.JPanel content;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JMenu jMenu11;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
@@ -332,5 +338,6 @@ public class frmMenu extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JLabel lblHello;
     // End of variables declaration//GEN-END:variables
 }
