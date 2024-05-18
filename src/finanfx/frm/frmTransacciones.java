@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package Formularios;
+package finanfx.frm;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,7 +30,6 @@ public class frmTransacciones extends javax.swing.JPanel {
      */
     public frmTransacciones() throws SQLException {
         initComponents();
-        saveTransaction();
     }
     
     private void saveTransaction() throws SQLException{
@@ -178,7 +177,6 @@ public class frmTransacciones extends javax.swing.JPanel {
         jLabel9.setText("ID usuario");
 
         jcbTransactionType.setBackground(new java.awt.Color(221, 221, 221));
-        jcbTransactionType.setForeground(new java.awt.Color(0, 0, 0));
         jcbTransactionType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jftDate.addActionListener(new java.awt.event.ActionListener() {
