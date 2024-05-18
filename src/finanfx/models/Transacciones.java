@@ -1,6 +1,7 @@
 package finanfx.models;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 
 public class Transacciones {
     private int ID_Transaccion;
@@ -38,9 +39,14 @@ public class Transacciones {
     public double getCantidad() {
         return Cantidad;
     }
-
-    public Date getFecha() {
+    
+    public Date getFecha(){
         return Fecha;
+    }
+    
+    public String getFechaAsString() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        return dateFormat.format(this.Fecha);
     }
 
     public String getCategoria() {

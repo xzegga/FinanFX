@@ -4,6 +4,7 @@
  */
 package Formularios;
 
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
@@ -32,20 +33,22 @@ public class frmTransacciones extends javax.swing.JPanel {
      */
     public frmTransacciones() throws SQLException {
         initComponents();
-       
     }
     
     private void saveTransaction() throws SQLException{
         try{
            int idUsuario = Integer.parseInt(txtIDUser.getText());
            String transactionType = jcbTransactionType.getSelectedItem().toString();
-           String dateStr = jftDate.getText();
-           SimpleDateFormat sdf = new SimpleDateFormat("yyyy/mm/dd");
-           Date fecha = sdf.parse(dateStr);
+           String dat = txtDate.getText();
            double amount = Double.parseDouble(txtAmount.getText());
            String Categories = jcbCategories.getSelectedItem().toString();
            String paymentMethod = jcbPaymentMethod.getSelectedItem().toString();
            String description = txtDescription.getText();
+           
+           //Convercion date to string 
+           SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+           java.util.Date parsedDate = dateFormat.parse(dat);
+           java.sql.Date sqlDate = new java.sql.Date(parsedDate.getTime());
            
            Connection conn = DatabaseConnection.getConnection();
            
@@ -54,7 +57,7 @@ public class frmTransacciones extends javax.swing.JPanel {
             stmt.setInt(1, idUsuario);
             stmt.setString(2, transactionType);
             stmt.setDouble(3, amount);
-            stmt.setDate(4, new java.sql.Date(fecha.getTime()));
+            stmt.setDate(4, sqlDate);
             stmt.setString(5, Categories);
             stmt.setString(6, description);
             stmt.setString(7, paymentMethod);
@@ -66,19 +69,21 @@ public class frmTransacciones extends javax.swing.JPanel {
             
            JOptionPane.showMessageDialog(this, "Transacción realizada exitosamente.");
            clearData();
-        }catch(NumberFormatException | ParseException ex){
+        }catch(NumberFormatException ex){
             JOptionPane.showMessageDialog(this, "Error al guardar la transacción: " + ex.getMessage());
+        }catch(ParseException ex){
+            JOptionPane.showMessageDialog(this, "Formato de fecha invalido: "+ex.getMessage());
         }
     }
 
     private void clearData(){
         txtIDTransacction.setText("");
         txtIDUser.setText("");
-        jcbTransactionType.setSelectedIndex(0);
-        jftDate.setValue("");
+        jcbTransactionType.setSelectedIndex(-1);
+        txtDate.setText("");
         txtAmount.setText("");
-        jcbCategories.setSelectedIndex(0);
-        jcbPaymentMethod.setSelectedIndex(0);
+        jcbCategories.setSelectedIndex(-1);
+        jcbPaymentMethod.setSelectedIndex(-1);
         txtDescription.setText("");
     }
     
@@ -91,6 +96,7 @@ public class frmTransacciones extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jTextField1 = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         txtDescription = new javax.swing.JTextField();
@@ -108,12 +114,14 @@ public class frmTransacciones extends javax.swing.JPanel {
         jLabel4 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jcbTransactionType = new javax.swing.JComboBox<>();
-        jftDate = new javax.swing.JFormattedTextField();
-        jLabel10 = new javax.swing.JLabel();
         jcbCategories = new javax.swing.JComboBox<>();
         btnSearch = new javax.swing.JButton();
         btnClean = new javax.swing.JButton();
         jcbPaymentMethod = new javax.swing.JComboBox<>();
+        txtDate = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+
+        jTextField1.setText("jTextField1");
 
         setBackground(new java.awt.Color(255, 255, 204));
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -176,19 +184,11 @@ public class frmTransacciones extends javax.swing.JPanel {
 
         jcbTransactionType.setBackground(new java.awt.Color(255, 255, 255));
         jcbTransactionType.setForeground(new java.awt.Color(0, 0, 0));
-        jcbTransactionType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Deposito Bancario", "Transferencia Bancaria", "Pago de servicios", "Cobro de salario", "Transferencia 365", "Recarga de celular", "Otro" }));
-
-        jftDate.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jftDateActionPerformed(evt);
-            }
-        });
-
-        jLabel10.setText("*formato de fecha : año/mes/dia*");
+        jcbTransactionType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione una opcion", "Deposito Bancario", "Transferencia Bancaria", "Pago de servicios", "Cobro de salario", "Transferencia 365", "Recarga de celular", "Otro" }));
 
         jcbCategories.setBackground(new java.awt.Color(255, 255, 255));
         jcbCategories.setForeground(new java.awt.Color(0, 0, 0));
-        jcbCategories.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Alimentación", "Vivienda", "Transporte", "Entretenimiento", "Salud", "Educación", "Servicios públicos", "Ropa", "Viajes", "Ahorros e inversiones" }));
+        jcbCategories.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "---- Seleccione una opcion ----", "Alimentación", "Vivienda", "Transporte", "Entretenimiento", "Salud", "Educación", "Servicios públicos", "Ropa", "Viajes", "Ahorros e inversiones" }));
 
         btnSearch.setText("Buscar");
         btnSearch.addActionListener(new java.awt.event.ActionListener() {
@@ -206,7 +206,9 @@ public class frmTransacciones extends javax.swing.JPanel {
 
         jcbPaymentMethod.setBackground(new java.awt.Color(255, 255, 255));
         jcbPaymentMethod.setForeground(new java.awt.Color(0, 0, 0));
-        jcbPaymentMethod.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Efectivo", "Tarjeta", "Cheque" }));
+        jcbPaymentMethod.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "---- Seleccione una opcion ----", "Efectivo", "Tarjeta", "Cheque" }));
+
+        jLabel10.setText("Ingrese la fecha (yyyy-mm-dd)");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -217,100 +219,100 @@ public class frmTransacciones extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(22, 22, 22)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addComponent(jLabel9)
-                                        .addGap(18, 18, 18))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel2)
-                                        .addGap(18, 18, 18))))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jLabel4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtIDUser, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jcbTransactionType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(133, 133, 133)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(txtIDTransacction, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnSearch))))
+                                .addGap(158, 158, 158)
+                                .addComponent(txtIDTransacction, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnSearch))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(98, 98, 98)
-                        .addComponent(btnSave)
-                        .addGap(38, 38, 38)
-                        .addComponent(jButton6)
-                        .addGap(37, 37, 37)
-                        .addComponent(jButton4)
-                        .addGap(30, 30, 30)
-                        .addComponent(btnClean))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(45, 45, 45)
+                        .addGap(22, 22, 22)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel9)
+                            .addComponent(jLabel2)
                             .addComponent(jLabel5)
                             .addComponent(jLabel3)
                             .addComponent(jLabel7)
-                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel4))
+                        .addGap(33, 33, 33)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jcbCategories, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jcbTransactionType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(txtDate, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtAmount, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE))
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel10))
+                            .addComponent(txtIDUser, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(58, 58, 58)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jftDate, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel10))
-                            .addComponent(txtAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jcbCategories, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jcbPaymentMethod, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(32, Short.MAX_VALUE))
+                            .addComponent(jcbPaymentMethod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(92, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(btnSave)
+                .addGap(18, 18, 18)
+                .addComponent(jButton6)
+                .addGap(18, 18, 18)
+                .addComponent(jButton4)
+                .addGap(18, 18, 18)
+                .addComponent(btnClean)
+                .addGap(108, 108, 108))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
                     .addComponent(txtIDTransacction, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSearch))
+                    .addComponent(btnSearch)
+                    .addComponent(jLabel4))
                 .addGap(9, 9, 9)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtIDUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel9))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jcbTransactionType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jftDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel10))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jcbCategories, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jcbCategories, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jcbPaymentMethod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnSave)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnClean)
+                    .addComponent(jButton4)
                     .addComponent(jButton6)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton4)
-                        .addComponent(btnClean))))
+                    .addComponent(btnSave))
+                .addGap(35, 35, 35))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -338,10 +340,6 @@ public class frmTransacciones extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtAmountActionPerformed
 
-    private void jftDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jftDateActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jftDateActionPerformed
-
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         try{
             int userID = Integer.parseInt(txtIDTransacction.getText());
@@ -353,7 +351,7 @@ public class frmTransacciones extends javax.swing.JPanel {
                  txtIDTransacction.setText(String.valueOf(frtTransacciones.getID_Transaccion()));
                  txtIDUser.setText(String.valueOf(frtTransacciones.getID_Usuario()));
                  jcbTransactionType.setSelectedItem(frtTransacciones.getTipo_Transaccion());
-                 jftDate.setValue(frtTransacciones.getFecha());
+                 txtDate.setText(frtTransacciones.getFechaAsString());
                  txtAmount.setText(String.valueOf(frtTransacciones.getCantidad()));
                  jcbCategories.setSelectedItem(frtTransacciones.getCategoria());
                  jcbPaymentMethod.setSelectedItem(frtTransacciones.getForma_Pago());
@@ -371,14 +369,13 @@ public class frmTransacciones extends javax.swing.JPanel {
     private void btnCleanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCleanActionPerformed
         txtIDTransacction.setText("");
         txtIDUser.setText("");
-        jcbTransactionType.setSelectedIndex(0);
-        jftDate.setValue("");
+        jcbTransactionType.setSelectedIndex(-1);
+        txtDate.setText("");
         txtAmount.setText("");
-        jcbCategories.setSelectedIndex(0);
-        jcbPaymentMethod.setSelectedIndex(0);
+        jcbCategories.setSelectedIndex(-1);
+        jcbPaymentMethod.setSelectedIndex(-1);
         txtDescription.setText("");
     }//GEN-LAST:event_btnCleanActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnClean;
@@ -396,13 +393,20 @@ public class frmTransacciones extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JComboBox<String> jcbCategories;
     private javax.swing.JComboBox<String> jcbPaymentMethod;
     private javax.swing.JComboBox<String> jcbTransactionType;
-    private javax.swing.JFormattedTextField jftDate;
     private javax.swing.JTextField txtAmount;
+    private javax.swing.JTextField txtDate;
     private javax.swing.JTextField txtDescription;
     private javax.swing.JTextField txtIDTransacction;
     private javax.swing.JTextField txtIDUser;
     // End of variables declaration//GEN-END:variables
+
+    private static class dateChooser {
+
+        public dateChooser() {
+        }
+    }
 }
