@@ -49,7 +49,7 @@ public class Transaccion {
             String sql = "EXEC SP_ActualizarTransaccion ?, ?, ?, ?, ?, ?, ?";
             stmt = conn.prepareCall(sql);
             
-            stmt.setInt(1, transactions.getID_Usuario());
+            stmt.setInt(1, transactions.getID_Transaccion());
             stmt.setString(2, transactions.getTipo_Transaccion());
             stmt.setDouble(3, transactions.getCantidad());
             stmt.setDate(4, transactions.getFecha());
