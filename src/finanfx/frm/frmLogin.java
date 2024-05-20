@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package Formularios;
+package finanfx.frm;
 /**
  *
  * @author Ander
@@ -44,7 +44,6 @@ public class frmLogin extends javax.swing.JFrame {
         btnSalir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(0, 0));
         setMinimumSize(new java.awt.Dimension(450, 300));
         setResizable(false);
         getContentPane().setLayout(null);
@@ -54,7 +53,7 @@ public class frmLogin extends javax.swing.JFrame {
         getContentPane().add(jLabel1);
         jLabel1.setBounds(160, 10, 170, 32);
         getContentPane().add(txtUsuario);
-        txtUsuario.setBounds(130, 60, 198, 26);
+        txtUsuario.setBounds(130, 60, 198, 22);
 
         jLabel2.setText("Usuario");
         getContentPane().add(jLabel2);
@@ -66,7 +65,7 @@ public class frmLogin extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtClave);
-        txtClave.setBounds(130, 100, 198, 26);
+        txtClave.setBounds(130, 100, 198, 22);
 
         jLabel3.setText("Contraseña");
         getContentPane().add(jLabel3);
@@ -97,7 +96,7 @@ public class frmLogin extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnAcceder);
-        btnAcceder.setBounds(130, 143, 95, 27);
+        btnAcceder.setBounds(130, 143, 95, 23);
 
         btnSalir.setText("Salir");
         btnSalir.addActionListener(new java.awt.event.ActionListener() {
@@ -106,7 +105,7 @@ public class frmLogin extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnSalir);
-        btnSalir.setBounds(231, 143, 97, 27);
+        btnSalir.setBounds(231, 143, 97, 23);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

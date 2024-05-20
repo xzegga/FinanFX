@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package Formularios;
+package finanfx.frm;
 
 
 import java.awt.event.ActionEvent;
@@ -182,12 +182,8 @@ public class frmTransacciones extends javax.swing.JPanel {
 
         jLabel9.setText("ID usuario");
 
-        jcbTransactionType.setBackground(new java.awt.Color(255, 255, 255));
-        jcbTransactionType.setForeground(new java.awt.Color(0, 0, 0));
         jcbTransactionType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione una opcion", "Deposito Bancario", "Transferencia Bancaria", "Pago de servicios", "Cobro de salario", "Transferencia 365", "Recarga de celular", "Otro" }));
 
-        jcbCategories.setBackground(new java.awt.Color(255, 255, 255));
-        jcbCategories.setForeground(new java.awt.Color(0, 0, 0));
         jcbCategories.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "---- Seleccione una opcion ----", "Alimentación", "Vivienda", "Transporte", "Entretenimiento", "Salud", "Educación", "Servicios públicos", "Ropa", "Viajes", "Ahorros e inversiones" }));
 
         btnSearch.setText("Buscar");
@@ -204,8 +200,6 @@ public class frmTransacciones extends javax.swing.JPanel {
             }
         });
 
-        jcbPaymentMethod.setBackground(new java.awt.Color(255, 255, 255));
-        jcbPaymentMethod.setForeground(new java.awt.Color(0, 0, 0));
         jcbPaymentMethod.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "---- Seleccione una opcion ----", "Efectivo", "Tarjeta", "Cheque" }));
 
         jLabel10.setText("Ingrese la fecha (yyyy-mm-dd)");
