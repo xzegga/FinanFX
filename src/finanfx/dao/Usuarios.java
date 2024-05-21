@@ -71,6 +71,36 @@ public class Usuarios {
             throw new SQLException("Error al autenticar el usuario", e);
         }
                 
-        
+       
+    }
+    
+    public static void updateUsuarios(User users) throws SQLException
+    {
+        Connection conn = null;
+        CallableStatement stmt = null;
+        try
+        {
+            conn = DatabaseConnection.getConnection();
+            String sql = "EXEC SP_ActualizarUsuario ?, ?, ?, ?, ?, ?, ?";
+            stmt = conn.prepareCall(sql);
+            
+            stmt.setInt(1, users.getID());
+            stmt.setString(2, users.getNombre());
+            stmt.setString(2, users.getApellido());
+            stmt.setDate(3, users.getFechaNacimiento());
+            stmt.setString(4, users.getEmail());
+            stmt.setString(5, users.getTelefono());
+            stmt.setString(6, users.getEstado());
+            stmt.setString(7, DatabaseConfig.DB_PATTERN);
+        }
+        finally
+        {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        }
     }
 }
