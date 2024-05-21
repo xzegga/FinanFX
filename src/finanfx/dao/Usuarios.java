@@ -15,6 +15,8 @@ import java.sql.Connection;
 import java.sql.CallableStatement;
 import java.sql.SQLException;
 import finanfx.models.User;
+import javax.swing.JOptionPane;
+
 
 public class Usuarios {
     public static CallableStatement re;
@@ -48,5 +50,27 @@ public class Usuarios {
                 conn.close();
             }
         }
+    }
+    
+    public static void changeClave(String email, String Contra, String NContra, String VContra) throws SQLException
+    {        
+        try(
+            Connection connection = DatabaseConnection.getConnection(); 
+            CallableStatement statement = connection.prepareCall("{call SP_ResetearContrasena(?,?,?,?,?)}")
+        ){
+        
+            statement.setString(1, email);
+            statement.setString(2, Contra);
+            statement.setString(3, NContra);
+            statement.setString(4, VContra);
+            statement.setString(5, DatabaseConfig.DB_PATTERN);
+            
+            statement.execute();
+            
+        } catch (SQLException e) {
+            throw new SQLException("Error al autenticar el usuario", e);
+        }
+                
+        
     }
 }
