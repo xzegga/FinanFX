@@ -41,11 +41,11 @@ public class frmMenu extends javax.swing.JFrame {
         content.removeAll();
         frmLogin Logeo = new frmLogin();
         
-        if(Logeo.Control == 0)
+        /*if(Logeo.Control == 0)
         {
             Logeo.setVisible(true);
             this.dispose();
-        }
+        }*/
     }
 
     /**
