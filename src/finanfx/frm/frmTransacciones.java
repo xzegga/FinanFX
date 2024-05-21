@@ -35,47 +35,6 @@ public class frmTransacciones extends javax.swing.JPanel {
         initComponents();
     }
     
-    private void saveTransaction() throws SQLException{
-        try{
-           int idUsuario = Integer.parseInt(txtIDUser.getText());
-           String transactionType = jcbTransactionType.getSelectedItem().toString();
-           String dat = txtDate.getText();
-           double amount = Double.parseDouble(txtAmount.getText());
-           String Categories = jcbCategories.getSelectedItem().toString();
-           String paymentMethod = jcbPaymentMethod.getSelectedItem().toString();
-           String description = txtDescription.getText();
-           
-           //Convercion date to string 
-           SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
-           java.util.Date parsedDate = dateFormat.parse(dat);
-           java.sql.Date sqlDate = new java.sql.Date(parsedDate.getTime());
-           
-           Connection conn = DatabaseConnection.getConnection();
-           
-            String sql = "{call SP_CrearTransaccion(?, ?, ?, ?, ?, ?, ?)}";
-            CallableStatement stmt = conn.prepareCall(sql);
-            stmt.setInt(1, idUsuario);
-            stmt.setString(2, transactionType);
-            stmt.setDouble(3, amount);
-            stmt.setDate(4, sqlDate);
-            stmt.setString(5, Categories);
-            stmt.setString(6, description);
-            stmt.setString(7, paymentMethod);
-            
-            stmt.executeUpdate();
-            
-            stmt.close();
-            conn.close();
-            
-           JOptionPane.showMessageDialog(this, "Transacción realizada exitosamente.");
-           clearData();
-        }catch(NumberFormatException ex){
-            JOptionPane.showMessageDialog(this, "Error al guardar la transacción: " + ex.getMessage());
-        }catch(ParseException ex){
-            JOptionPane.showMessageDialog(this, "Formato de fecha invalido: "+ex.getMessage());
-        }
-    }
-
     private void clearData(){
         txtIDTransacction.setText("");
         txtIDUser.setText("");
@@ -162,6 +121,11 @@ public class frmTransacciones extends javax.swing.JPanel {
         });
 
         btnDelete.setText("Eliminar");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
 
         txtAmount.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -304,7 +268,7 @@ public class frmTransacciones extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSave)
                     .addComponent(btnUpdate)
@@ -315,34 +279,99 @@ public class frmTransacciones extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        try {
-        saveTransaction();
-    } catch (SQLException ex) {
-        JOptionPane.showMessageDialog(this, "Error al guardar la transacción: " + ex.getMessage());
-    }
+        String idUserStr = txtIDUser.getText();
+        String transactionType = (String) jcbTransactionType.getSelectedItem();
+        String amountStr = txtAmount.getText();
+        String dateStr = txtDate.getText();
+        String category = (String) jcbCategories.getSelectedItem();
+        String paymentMethod = (String) jcbPaymentMethod.getSelectedItem();
+        String description = txtDescription.getText();
+
+        // Validar que los campos no estén vacíos
+        if (idUserStr.isEmpty() || transactionType.isEmpty() || amountStr.isEmpty() || dateStr.isEmpty() || category.isEmpty() || paymentMethod.isEmpty() || description.isEmpty())
+        {
+            JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.");
+            return;
+        }
+
+        try
+        {
+            java.sql.Date Fecha = null;
+            // Crear un objeto Transacciones con los datos del formulario
+            Transacciones transaction = new Transacciones(WIDTH, transactionType, WIDTH, Fecha, category, description, description);
+            transaction.setID_Usuario(Integer.parseInt(idUserStr));
+            transaction.setTipo_Transaccion(transactionType);
+            transaction.setCantidad(Double.parseDouble(amountStr));
+            transaction.setFecha(java.sql.Date.valueOf(dateStr));
+            transaction.setCategoria(category);
+            transaction.setDescripcion(description);
+            transaction.setForma_Pago(paymentMethod);
+
+            // Llamar al método saveTransaction del DAO
+            Transaccion.saveTransaction(transaction);
+
+            // Mostrar mensaje de éxito
+            JOptionPane.showMessageDialog(this, "Transacción guardada con éxito");
+
+            // Limpiar los campos del formulario
+            txtIDUser.setText("");
+            jcbTransactionType.setSelectedIndex(-1); // Seleccionar nada
+            txtAmount.setText("");
+            txtDate.setText("");
+            jcbCategories.setSelectedIndex(-1); // Seleccionar nada
+            txtDescription.setText("");
+            jcbPaymentMethod.setSelectedIndex(-1); // Seleccionar nada
+
+        } catch (SQLException ex)
+        {
+            // Manejar la excepción
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al guardar la transacción: " + ex.getMessage());
+        } catch (NumberFormatException ex)
+        {
+            // Manejar excepción si el formato de algún número es incorrecto
+            JOptionPane.showMessageDialog(this, "Por favor, ingrese valores numéricos válidos.");
+        } catch (IllegalArgumentException ex)
+        {
+            // Manejar excepción si la fecha no es válida
+            JOptionPane.showMessageDialog(this, "Por favor, ingrese una fecha válida en formato YYYY-MM-DD.");
+        }
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        String idUserStr = txtIDUser.getText();
+        String transactionType = (String) jcbTransactionType.getSelectedItem();
+        String amountStr = txtAmount.getText();
+        String dateStr = txtDate.getText();
+        String category = (String) jcbCategories.getSelectedItem();
+        String paymentMethod = (String) jcbPaymentMethod.getSelectedItem();
+        String description = txtDescription.getText();
+        
+        if(idUserStr.isEmpty() || transactionType.isEmpty() || amountStr.isEmpty() || dateStr.isEmpty() || category.isEmpty() || paymentMethod.isEmpty() || description.isEmpty()){
+            JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.");
+            return;
+        }
+        
         try{
-            int idTransaction = Integer.parseInt(txtIDTransacction.getText());
-            String trasactionType = jcbTransactionType.getSelectedItem().toString();
-            String dateText = txtDate.getText();
-            java.sql.Date dat = java.sql.Date.valueOf(dateText);
-            double amount = Double.parseDouble(txtAmount.getText());
-            String category = jcbCategories.getSelectedItem().toString();
-            String paymentMethod = jcbPaymentMethod.getSelectedItem().toString();
-            String description = txtDescription.getText();
+            java.sql.Date Fecha = null;
+            Transacciones transaction = new Transacciones(WIDTH, transactionType, WIDTH, Fecha, category, description, description);
+            transaction.setID_Usuario(Integer.parseInt(idUserStr));
+            transaction.setTipo_Transaccion(transactionType);
+            transaction.setCantidad(Double.parseDouble(amountStr));
+            transaction.setFecha(java.sql.Date.valueOf(dateStr));
+            transaction.setDescripcion(description);
+            transaction.setForma_Pago(paymentMethod);
             
-            int response = JOptionPane.showConfirmDialog(this, "Estas seguro de esta actualizacion?","Confirmar actualizacion",JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
-            if(response == JOptionPane.OK_OPTION){
-                Transacciones transaction = new Transacciones(idTransaction, idTransaction, trasactionType, amount, dat, category, description, paymentMethod);
-                Transaccion.updateTransaction(transaction);
-                JOptionPane.showMessageDialog(this, "Datos de la transaccion actualiazados correctamente");
-            }
+            Transaccion.updateTransaction(transaction);
+            
+            JOptionPane.showMessageDialog(this, "Transacción actualizada con éxito");
+        }catch (SQLException ex){
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al actualizar la transacción: "+ex.getMessage());
         }catch(NumberFormatException ex){
-            JOptionPane.showMessageDialog(this, "Datos ingresados incorrectamente. "+ex.getMessage());
-        }catch(SQLException ex){
-            JOptionPane.showMessageDialog(this, "Error al actualizar los datos de la transacción: "+ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Por favor, ingrese valores numéricos válidos.");
+        }catch(IllegalArgumentException ex){
+            JOptionPane.showMessageDialog(this, "Por favor, ingrese una fecha válida en formato YYYY-MM-DD.");
         }
     }//GEN-LAST:event_btnUpdateActionPerformed
 
@@ -359,28 +388,38 @@ public class frmTransacciones extends javax.swing.JPanel {
     }//GEN-LAST:event_txtAmountActionPerformed
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        String searchTransactionIDStr = txtIDTransacction.getText();
+        if(searchTransactionIDStr.isEmpty()){
+            JOptionPane.showMessageDialog(this, "Por favor, ingrese un ID de transacción.");
+            return;
+        }
         try{
-            int userID = Integer.parseInt(txtIDTransacction.getText());
-             Transacciones[] transactions = Transaccion.listTransactions(userID);
-             
-             if(transactions != null && transactions.length > 0){
-                 Transacciones frtTransacciones = transactions[0];
-                 
-                 txtIDTransacction.setText(String.valueOf(frtTransacciones.getID_Transaccion()));
-                 txtIDUser.setText(String.valueOf(frtTransacciones.getID_Usuario()));
-                 jcbTransactionType.setSelectedItem(frtTransacciones.getTipo_Transaccion());
-                 txtDate.setText(frtTransacciones.getFechaAsString());
-                 txtAmount.setText(String.valueOf(frtTransacciones.getCantidad()));
-                 jcbCategories.setSelectedItem(frtTransacciones.getCategoria());
-                 txtDescription.setText(frtTransacciones.getDescripcion());
-                 jcbPaymentMethod.setSelectedItem(frtTransacciones.getForma_Pago());
-             }else{
-                 JOptionPane.showMessageDialog(this, "No se encontraron transacciones para el usuario especificado.");
-             }
+            int searchTransactionID = Integer.parseInt(searchTransactionIDStr);
+            
+            Transacciones[] transactions = Transaccion.listTransactions(searchTransactionID);
+            
+            if(transactions.length > 0){
+                
+                Transacciones transaction = transactions[0];
+                
+                txtIDTransacction.setText(String.valueOf(transaction.getID_Transaccion()));
+                txtIDUser.setText(String.valueOf(transaction.getID_Usuario()));
+                jcbTransactionType.setSelectedItem(transaction.getTipo_Transaccion());
+                txtDate.setText(transaction.getFecha().toString());
+                txtAmount.setText(String.valueOf(transaction.getCantidad()));
+                jcbCategories.setSelectedItem(transaction.getCategoria());
+                txtDescription.setText(transaction.getDescripcion());
+                jcbPaymentMethod.setSelectedItem(transaction.getForma_Pago());
+                
+                JOptionPane.showMessageDialog(this, "Transacción encontrada.");
+            }else{
+                JOptionPane.showMessageDialog(this, "No se encontró ninguna transacción con ese ID.");
+            }
         }catch(NumberFormatException ex){
-            JOptionPane.showMessageDialog(this, "Por favor, introduzca un ID de usuario válido.");
+            JOptionPane.showMessageDialog(this, "Por favor, ingrese un ID de transacción válido.");
         }catch(SQLException ex){
-            JOptionPane.showMessageDialog(this, "Error al buscar transacciones: " + ex.getMessage());
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al buscar la transacción: " +ex.getMessage());
         }
     }//GEN-LAST:event_btnSearchActionPerformed
 
@@ -394,6 +433,34 @@ public class frmTransacciones extends javax.swing.JPanel {
         jcbPaymentMethod.setSelectedIndex(0);
         txtDescription.setText("");
     }//GEN-LAST:event_btnCleanActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        String idTransactionStr = txtIDTransacction.getText();
+        
+        if(idTransactionStr.isEmpty()){
+            JOptionPane.showMessageDialog(this, "Por favor, ingrese el ID de la transacción a eliminar.");
+            return;
+        }
+        
+        try{
+            int idTransaction = Integer.parseInt(idTransactionStr);
+            
+            int response = JOptionPane.showConfirmDialog(this, "¿Está seguro de que desea eliminar esta transacción?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+            
+            if(response == JOptionPane.YES_OPTION){
+                Transaccion.deleteTransactions(idTransaction);
+                
+                JOptionPane.showMessageDialog(this, "Transacción eliminada con éxito");
+                
+                clearData();
+            }
+        }catch (NumberFormatException ex){
+            JOptionPane.showMessageDialog(this, "Por favor, ingrese un ID de transacción válido.");
+        }catch (SQLException ex){
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al eliminar la transacción: "+ex.getMessage());
+        }
+    }//GEN-LAST:event_btnDeleteActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnClean;
