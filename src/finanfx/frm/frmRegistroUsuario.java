@@ -2,12 +2,27 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package Formularios;
+package finanfx.frm;
 
 /**
  *
  * @author Ander
  */
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.swing.JOptionPane;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.SQLException;
+import finanfx.data.DatabaseConnection;
+import finanfx.dao.Usuarios;
+import finanfx.data.DatabaseConfig;
+import java.sql.ResultSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 public class frmRegistroUsuario extends javax.swing.JFrame {
 
     /**
@@ -175,6 +190,44 @@ public class frmRegistroUsuario extends javax.swing.JFrame {
 
     private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
         // TODO add your handling code here:
+        try
+        {
+            String nombres = txtNombres.getText();
+            String apellidos = txtApellidos.getText();
+            String FechaN = txtNacimiento.getText();
+            String email = txtCorreo.getText();
+            String contrasena = txtClave.getText();
+            String telefono = txtTelefono.getText();
+            String estado = "a";
+            
+           SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
+           java.util.Date parsedDate = dateFormat.parse(FechaN);
+           java.sql.Date sqlDate = new java.sql.Date(parsedDate.getTime());
+            
+            Connection conn = DatabaseConnection.getConnection();
+            String sql = "{call SP_CrearUsuario (?, ?, ?, ?, ?, ?, ?, ?)}";
+            CallableStatement stmt = conn.prepareCall(sql);
+            
+            stmt.setString(1, nombres);
+            stmt.setString(2, apellidos);
+            stmt.setDate(3, sqlDate);
+            stmt.setString(4, email);
+            stmt.setString(5, contrasena);
+            stmt.setString(6, telefono);
+            stmt.setString(7, estado);
+            stmt.setString(8, DatabaseConfig.DB_PATTERN);
+           
+            stmt.executeUpdate();
+            
+            stmt.close();
+            conn.close();
+            
+            JOptionPane.showMessageDialog(this, "Registro perfecto ");
+            
+        }catch(Exception x)
+        {
+            JOptionPane.showMessageDialog(this, "Error al registrar usuario: " + x.getMessage());
+        }
     }//GEN-LAST:event_btnConfirmarActionPerformed
 
     private void txtNacimientoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNacimientoActionPerformed

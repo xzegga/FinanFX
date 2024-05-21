@@ -5,8 +5,11 @@ import finanfx.data.DatabaseConnection;
 import java.sql.Connection;
 import java.sql.CallableStatement;
 import java.sql.SQLException;
+import finanfx.models.User;
 
 public class Login {
+    
+    
     public int validateUserLogin(String email, String password) throws SQLException {
         int userID = 0;
         try (

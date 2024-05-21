@@ -40,29 +40,33 @@ public class Transaccion {
             }
         }
     }
-    public static  void updateTransaction(Transacciones transactions) throws SQLException{
+    
+    public static void updateTransaction(Transacciones transaction) throws SQLException {
         Connection conn = null;
         CallableStatement stmt = null;
-        
-        try{
+
+        try {
             conn = DatabaseConnection.getConnection();
             String sql = "EXEC SP_ActualizarTransaccion ?, ?, ?, ?, ?, ?, ?";
             stmt = conn.prepareCall(sql);
-            
-            stmt.setInt(1, transactions.getID_Transaccion());
-            stmt.setString(2, transactions.getTipo_Transaccion());
-            stmt.setDouble(3, transactions.getCantidad());
-            stmt.setDate(4, transactions.getFecha());
-            stmt.setString(5, transactions.getCategoria());
-            stmt.setString(6, transactions.getDescripcion());
-            stmt.setString(7, transactions.getForma_Pago());
-            
+
+            // Configuración de parámetros del stored procedure
+            stmt.setInt(1, transaction.getID_Usuario());
+            stmt.setString(2, transaction.getTipo_Transaccion());
+            stmt.setDouble(3, transaction.getCantidad());
+            stmt.setDate(4, transaction.getFecha());
+            stmt.setString(5, transaction.getCategoria());
+            stmt.setString(6, transaction.getDescripcion());
+            stmt.setString(7, transaction.getForma_Pago());
+
+            // Ejecutar consulta
             stmt.executeUpdate();
-        }finally{
-            if(stmt != null){
+
+        } finally {
+            if (stmt != null) {
                 stmt.close();
             }
-            if(conn != null){
+            if (conn != null) {
                 conn.close();
             }
         }

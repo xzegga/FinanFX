@@ -2,27 +2,39 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package Formularios;
+package finanfx.frm;
 /**
  *
  * @author Ander
  */
-import finanfx.dao.Login;
-import finanfx.models.User;
-import java.sql.SQLException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.swing.JOptionPane;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.SQLException;
+import finanfx.data.DatabaseConnection;
+import finanfx.dao.Login;
+import finanfx.data.DatabaseConfig;
+import java.sql.ResultSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class frmLogin extends javax.swing.JFrame {
 
-    User usuarios = new User();
+    
     
     public frmLogin() {
         initComponents();
         this.setLocationRelativeTo(null);//Para centrar el form
     
     }
+     public static int Miembro = 0;
     
-    static int Control = 0; 
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -44,7 +56,6 @@ public class frmLogin extends javax.swing.JFrame {
         btnSalir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(0, 0));
         setMinimumSize(new java.awt.Dimension(450, 300));
         setResizable(false);
         getContentPane().setLayout(null);
@@ -54,7 +65,7 @@ public class frmLogin extends javax.swing.JFrame {
         getContentPane().add(jLabel1);
         jLabel1.setBounds(160, 10, 170, 32);
         getContentPane().add(txtUsuario);
-        txtUsuario.setBounds(130, 60, 198, 26);
+        txtUsuario.setBounds(130, 60, 198, 22);
 
         jLabel2.setText("Usuario");
         getContentPane().add(jLabel2);
@@ -66,7 +77,7 @@ public class frmLogin extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtClave);
-        txtClave.setBounds(130, 100, 198, 26);
+        txtClave.setBounds(130, 100, 198, 22);
 
         jLabel3.setText("Contraseña");
         getContentPane().add(jLabel3);
@@ -97,7 +108,7 @@ public class frmLogin extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnAcceder);
-        btnAcceder.setBounds(130, 143, 95, 27);
+        btnAcceder.setBounds(130, 143, 95, 23);
 
         btnSalir.setText("Salir");
         btnSalir.addActionListener(new java.awt.event.ActionListener() {
@@ -106,7 +117,7 @@ public class frmLogin extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnSalir);
-        btnSalir.setBounds(231, 143, 97, 27);
+        btnSalir.setBounds(231, 143, 97, 23);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -117,29 +128,22 @@ public class frmLogin extends javax.swing.JFrame {
 
     private void btnAccederActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAccederActionPerformed
         // TODO add your handling code here:
-        int validate;
-        try
-        {
-            Login logeo = new Login();
-            
-            validate=logeo.validateUserLogin(txtUsuario.getText(),txtClave.getText());
-            
-            if(validate>0)
+        try{
+            Login obj1 = new Login();
+            if(obj1.validateUserLogin(txtUsuario.getText(),txtClave.getText())>0)
             {
-                frmMenu mnu = new frmMenu();
-                mnu.setVisible(true);
+                Miembro = obj1.validateUserLogin(txtUsuario.getText(),txtClave.getText());
+                frmMenu menu = new frmMenu();
+                menu.setVisible(true);
                 this.hide();
-                Control = 1;
-                
-
             }else
             {
-                JOptionPane.showMessageDialog(null, "Acceso Denegado!");
+                JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos");
             }
             
-        }catch(Exception ex)
+        }catch(Exception x)
         {
-            JOptionPane.showMessageDialog(null, "Acceso Denegado! Error=" + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos");
         }
     }//GEN-LAST:event_btnAccederActionPerformed
 

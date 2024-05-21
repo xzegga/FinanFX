@@ -2,12 +2,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package Formularios;
+package finanfx.frm;
 
 /**
  *
  * @author Ander
  */
+import finanfx.dao.Usuarios;
+import javax.swing.JOptionPane;
+
 public class frmClave extends javax.swing.JFrame {
 
     /**
@@ -36,6 +39,7 @@ public class frmClave extends javax.swing.JFrame {
         btnConfirmar = new javax.swing.JButton();
         btnRegresar = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
+        txtVClave = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(450, 300));
@@ -66,11 +70,11 @@ public class frmClave extends javax.swing.JFrame {
 
         jLabel2.setText("Nueva contraseña");
         getContentPane().add(jLabel2);
-        jLabel2.setBounds(30, 130, 120, 16);
+        jLabel2.setBounds(30, 170, 120, 16);
 
         jLabel3.setText("Confirmar Contraseña");
         getContentPane().add(jLabel3);
-        jLabel3.setBounds(10, 170, 140, 22);
+        jLabel3.setBounds(10, 210, 140, 22);
 
         btnConfirmar.setText("Confirmar");
         btnConfirmar.addActionListener(new java.awt.event.ActionListener() {
@@ -79,7 +83,7 @@ public class frmClave extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnConfirmar);
-        btnConfirmar.setBounds(150, 200, 90, 23);
+        btnConfirmar.setBounds(150, 250, 90, 23);
 
         btnRegresar.setText("Regresar");
         btnRegresar.addActionListener(new java.awt.event.ActionListener() {
@@ -88,12 +92,20 @@ public class frmClave extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnRegresar);
-        btnRegresar.setBounds(260, 200, 90, 23);
+        btnRegresar.setBounds(260, 250, 90, 23);
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel4.setText("Recuperar Contraseña");
         getContentPane().add(jLabel4);
         jLabel4.setBounds(90, 40, 262, 33);
+
+        txtVClave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtVClaveActionPerformed(evt);
+            }
+        });
+        getContentPane().add(txtVClave);
+        txtVClave.setBounds(150, 210, 200, 22);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -108,6 +120,18 @@ public class frmClave extends javax.swing.JFrame {
 
     private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
         // TODO add your handling code here:
+        
+        try
+        {
+            Usuarios obj1 = new Usuarios();
+            
+            obj1.changeClave(txtCorreo.getText(),txtClave.getText(),txtCambiarClave.getText(),txtVClave.getText());
+             JOptionPane.showMessageDialog(this, "Clave cambiada exitosamente");
+            
+        }catch(Exception x)
+        {
+            JOptionPane.showMessageDialog(this, "Algo salio mal");
+        }
     }//GEN-LAST:event_btnConfirmarActionPerformed
 
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
@@ -116,6 +140,10 @@ public class frmClave extends javax.swing.JFrame {
         login.setVisible(true);
         this.hide();
     }//GEN-LAST:event_btnRegresarActionPerformed
+
+    private void txtVClaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtVClaveActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtVClaveActionPerformed
 
     /**
      * @param args the command line arguments
@@ -162,5 +190,6 @@ public class frmClave extends javax.swing.JFrame {
     private javax.swing.JPasswordField txtCambiarClave;
     private javax.swing.JPasswordField txtClave;
     private javax.swing.JTextField txtCorreo;
+    private javax.swing.JPasswordField txtVClave;
     // End of variables declaration//GEN-END:variables
 }
