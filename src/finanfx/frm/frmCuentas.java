@@ -74,8 +74,7 @@ public class frmCuentas extends javax.swing.JPanel {
     }
 
     private void updateAccount() {
-        boolean valid = validateFields();
-        if (!valid) {
+        if (!validateFields()) {
             return;
         }
 

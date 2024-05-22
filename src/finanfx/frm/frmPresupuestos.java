@@ -1,6 +1,7 @@
 package finanfx.frm;
 
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.swing.table.TableModel;
 
 /**
@@ -49,6 +50,25 @@ public class frmPresupuestos extends javax.swing.JPanel {
             }
         }
         // Si el periodo seleccionado no coincide con ninguno de los casos anteriores, no se agrega nada a cboStart
+    }
+
+    public boolean validateFields() {
+        if (cboPeriodo.getSelectedIndex() == 0) {
+            JOptionPane.showMessageDialog(this, "Selecciona un periodo específico", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        if (cboCategories.getSelectedIndex() == 0) {
+            JOptionPane.showMessageDialog(this, "Selecciona una categoría", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        if ("".equals(txtMonto.getText())) {
+            JOptionPane.showMessageDialog(this, "Ingresa un monto presupuestado", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        
+        return true;
     }
 
     /**
@@ -171,7 +191,7 @@ public class frmPresupuestos extends javax.swing.JPanel {
             jTable_Budgets.getColumnModel().getColumn(4).setResizable(false);
         }
 
-        cboPeriodo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Semanal", "Quincenal", "Mensual", " " }));
+        cboPeriodo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--- Seleccione una opción ---", "Semanal", "Quincenal", "Mensual", " " }));
         cboPeriodo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboPeriodoActionPerformed(evt);
@@ -238,11 +258,11 @@ public class frmPresupuestos extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cboPeriodo, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(15, 15, 15)
+                .addGap(14, 14, 14)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cboStart, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(14, 14, 14)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cboCategories, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
