@@ -87,7 +87,7 @@ public class Cuentas {
         }
     }
 
-    public void deleteCuenta(int idCuenta) throws SQLException {
+    public void removeAccount(int idCuenta) throws SQLException {
         try {
             connection = DatabaseConnection.getConnection();
             statement = connection.prepareCall("{CALL SP_EliminarCuentaFinanciera(?)}");
