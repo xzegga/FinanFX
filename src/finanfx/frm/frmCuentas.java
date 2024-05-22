@@ -4,11 +4,16 @@ import finanfx.dao.Cuentas;
 import finanfx.models.Cuenta;
 import finanfx.models.User;
 import finanfx.state.LoggedInUser;
+import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 /**
  *
@@ -31,10 +36,10 @@ public class frmCuentas extends javax.swing.JPanel {
             User loggedUser = LoggedInUser.getInstance().getUser();
             int idUsuario = loggedUser.getID();
             ArrayList<Cuenta> cuentas = accountService.getAccounntsByUserId(idUsuario);
-            
+
             DefaultTableModel model = (DefaultTableModel) jTable_Accounts.getModel();
             model.setRowCount(0); // Clear existing data
-            
+
             for (Cuenta cuenta : cuentas) {
                 Object[] row = {
                     cuenta.getIdCuenta(),
@@ -50,6 +55,63 @@ public class frmCuentas extends javax.swing.JPanel {
         }
     }
 
+    private void updateAccount() {
+        User loggedUser = LoggedInUser.getInstance().getUser();
+        int idUsuario = loggedUser.getID();
+
+        String id = txtId.getText();
+        int idCuenta = (id != null && id.matches("\\d+")) ? Integer.parseInt(id) : 0;
+
+        Double saldo = Double.valueOf(txtSaldo.getText());
+        String command = SaveOrCreate.getText();
+
+        Cuenta cuenta;
+        cuenta = new Cuenta(
+                idCuenta,
+                idUsuario,
+                (String) txtTipo.getSelectedItem(),
+                txtCuenta.getText(),
+                (String) cboBanco.getSelectedItem(),
+                saldo
+        );
+        try {
+            if (command.equals("Actualizar")) {
+                accountService.updateCuenta(cuenta, idCuenta);
+                JOptionPane.showMessageDialog(this, "Cuenta actualizada con éxito");
+            } else {
+                accountService.createCuenta(cuenta, idUsuario);
+                JOptionPane.showMessageDialog(this, "Cuenta guardada con éxito");
+            }
+            loadData();
+            clearTextBox();
+        } catch (SQLException ex) {
+            Logger.getLogger(frmCuentas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void validateDoubleInput(KeyEvent evt) {
+        // Get the character entered
+        char c = evt.getKeyChar();
+
+        // Allow backspace, decimal point, and digits (0-9)
+        if (Character.isDigit(c) || c == KeyEvent.VK_BACK_SPACE || c == '.') {
+            // Allow the character to be entered
+            return;
+        } else {
+            // Consume the event to prevent invalid character input
+            evt.consume();
+        }
+    }
+
+    private void clearTextBox() {
+        txtId.setText(null);
+        txtCuenta.setText(null);
+        txtSaldo.setText(null);
+        txtTipo.setSelectedIndex(0);
+        cboBanco.setSelectedIndex(0);
+        SaveOrCreate.setText("Guardar");
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -62,7 +124,7 @@ public class frmCuentas extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         txtCuenta = new javax.swing.JTextField();
-        jButton3 = new javax.swing.JButton();
+        SaveOrCreate = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -76,7 +138,7 @@ public class frmCuentas extends javax.swing.JPanel {
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable_Accounts = new javax.swing.JTable();
         txtTipo = new javax.swing.JComboBox<>();
-        txtSaldo = new javax.swing.JFormattedTextField();
+        txtSaldo = new javax.swing.JTextField();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -99,10 +161,15 @@ public class frmCuentas extends javax.swing.JPanel {
             }
         });
 
-        jButton3.setText("Guardar");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        SaveOrCreate.setText("Guardar");
+        SaveOrCreate.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                SaveOrCreateMouseClicked(evt);
+            }
+        });
+        SaveOrCreate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                SaveOrCreateActionPerformed(evt);
             }
         });
 
@@ -163,6 +230,11 @@ public class frmCuentas extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        jTable_Accounts.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable_AccountsMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(jTable_Accounts);
         if (jTable_Accounts.getColumnModel().getColumnCount() > 0) {
             jTable_Accounts.getColumnModel().getColumn(0).setResizable(false);
@@ -180,7 +252,16 @@ public class frmCuentas extends javax.swing.JPanel {
             }
         });
 
-        txtSaldo.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
+        txtSaldo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtSaldoActionPerformed(evt);
+            }
+        });
+        txtSaldo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtSaldoKeyPressed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -213,7 +294,7 @@ public class frmCuentas extends javax.swing.JPanel {
                                             .addComponent(txtSaldo))
                                         .addGap(1, 1, 1))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jButton3)
+                                        .addComponent(SaveOrCreate)
                                         .addGap(18, 18, 18)
                                         .addComponent(jButton5)
                                         .addGap(18, 18, 18)
@@ -229,33 +310,31 @@ public class frmCuentas extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(14, 14, 14)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(14, 14, 14)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(14, 14, 14)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(14, 14, 14)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cboBanco, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(14, 14, 14)
-                        .addComponent(txtTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(14, 14, 14)
-                        .addComponent(txtCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(14, 14, 14)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(14, 14, 14)
+                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(14, 14, 14)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cboBanco, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(14, 14, 14)
+                                .addComponent(txtTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(14, 14, 14)
+                                .addComponent(txtCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(14, 14, 14)
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtSaldo, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(txtSaldo, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton3)
+                    .addComponent(SaveOrCreate)
                     .addComponent(jButton5)
                     .addComponent(jButton4))
                 .addGap(37, 37, 37)
@@ -267,9 +346,9 @@ public class frmCuentas extends javax.swing.JPanel {
 
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void SaveOrCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaveOrCreateActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_SaveOrCreateActionPerformed
 
     private void txtCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCuentaActionPerformed
         // TODO add your handling code here:
@@ -287,10 +366,34 @@ public class frmCuentas extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtTipoActionPerformed
 
+    private void jTable_AccountsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable_AccountsMouseClicked
+        int index = jTable_Accounts.getSelectedRow();
+        TableModel model = jTable_Accounts.getModel();
+
+        txtId.setText(model.getValueAt(index, 0).toString());
+        txtTipo.setSelectedItem(model.getValueAt(index, 1).toString());
+        txtCuenta.setText(model.getValueAt(index, 2).toString());
+        cboBanco.setSelectedItem(model.getValueAt(index, 3).toString());
+        txtSaldo.setText(model.getValueAt(index, 4).toString());
+        SaveOrCreate.setText("Actualizar");
+    }//GEN-LAST:event_jTable_AccountsMouseClicked
+
+    private void SaveOrCreateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SaveOrCreateMouseClicked
+        updateAccount();
+    }//GEN-LAST:event_SaveOrCreateMouseClicked
+
+    private void txtSaldoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSaldoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtSaldoActionPerformed
+
+    private void txtSaldoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSaldoKeyPressed
+
+    }//GEN-LAST:event_txtSaldoKeyPressed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton SaveOrCreate;
     private javax.swing.JComboBox<String> cboBanco;
-    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
@@ -305,7 +408,7 @@ public class frmCuentas extends javax.swing.JPanel {
     private javax.swing.JTable jTable_Accounts;
     private javax.swing.JTextField txtCuenta;
     private javax.swing.JTextField txtId;
-    private javax.swing.JFormattedTextField txtSaldo;
+    private javax.swing.JTextField txtSaldo;
     private javax.swing.JComboBox<String> txtTipo;
     // End of variables declaration//GEN-END:variables
 }
