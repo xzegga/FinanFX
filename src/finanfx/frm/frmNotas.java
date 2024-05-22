@@ -19,6 +19,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import finanfx.data.DatabaseConnection;
 import finanfx.dao.Notas;
+import finanfx.models.Nota;
 import java.sql.ResultSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -60,6 +61,7 @@ public class frmNotas extends javax.swing.JPanel {
         btnBuscar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtNota = new javax.swing.JTextArea();
+        btnClean = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(255, 255, 204));
 
@@ -112,6 +114,13 @@ public class frmNotas extends javax.swing.JPanel {
         jScrollPane1.setViewportView(txtNota);
         txtNota.getAccessibleContext().setAccessibleName("");
 
+        btnClean.setText("Limpiar");
+        btnClean.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCleanActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -131,7 +140,9 @@ public class frmNotas extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(txtIDTransaccion, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)
-                            .addComponent(txtIDNota)))
+                            .addComponent(txtIDNota))
+                        .addGap(18, 18, 18)
+                        .addComponent(btnBuscar))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(102, 102, 102)
                         .addComponent(btnGuardar)
@@ -139,9 +150,9 @@ public class frmNotas extends javax.swing.JPanel {
                         .addComponent(btnEditar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnEliminar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnBuscar)))
-                .addContainerGap(124, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnClean)))
+                .addContainerGap(85, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -156,17 +167,19 @@ public class frmNotas extends javax.swing.JPanel {
                         .addGap(14, 14, 14)
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(txtIDNota, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(14, 14, 14)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtIDNota, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnBuscar))
+                        .addGap(12, 12, 12)
                         .addComponent(txtIDTransaccion, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(14, 14, 14)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(25, 25, 25)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnEliminar)
-                    .addComponent(btnBuscar)
                     .addComponent(btnEditar)
-                    .addComponent(btnGuardar))
+                    .addComponent(btnGuardar)
+                    .addComponent(btnClean))
                 .addContainerGap(118, Short.MAX_VALUE))
         );
 
@@ -255,36 +268,45 @@ public class frmNotas extends javax.swing.JPanel {
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        // TODO add your handling code here:
-        
-        
-        try
-        {
-            int idnota = Integer.parseInt(txtIDNota.getText());
-            
-            Connection conn = DatabaseConnection.getConnection();
-            
-            String sql = "{call SP_ObtenerNotaTransaccion (?)}";
-            CallableStatement stmt = conn.prepareCall(sql);
-            stmt.setInt(1, idnota);
-            
-            stmt.executeUpdate();
-            //txtNota.setText();
-            stmt.close();
-            conn.close();
-
-            
-            
+        String searchTransactionsIDStr = txtIDTransaccion.getText();
+        if(searchTransactionsIDStr.isEmpty()){
+            JOptionPane.showMessageDialog(this, "Por favor, ingrese un ID de transacción.");
+            return;
         }
-        catch(Exception x)
-        {
-            JOptionPane.showMessageDialog(this, "Nota no a sido encontrada.");
+        try{
+            int searchTransactionID = Integer.parseInt(searchTransactionsIDStr);
+            
+            Nota[] notas = Notas.searchNotes(searchTransactionID);
+            
+            if(notas.length > 0){
+                Nota nota = notas[0];
+                
+                txtIDNota.setText(String.valueOf(nota.getID_Nota()));
+                txtIDTransaccion.setText(String.valueOf(nota.getID_Transaccion()));
+                txtNota.setText(nota.getNota());
+                
+                JOptionPane.showMessageDialog(this, "Nota encontrada.");
+            }else{
+                JOptionPane.showMessageDialog(this, "No se encontró ninguna nota con ese ID de transacción.");
+            }
+        }catch(NumberFormatException ex){
+            JOptionPane.showMessageDialog(this, "Por favor, ingrese un ID de transacción válido.");
+        }catch(SQLException ex){
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al buscar la nota: " + ex.getMessage());
         }
     }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void btnCleanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCleanActionPerformed
+        txtIDNota.setText("");
+        txtIDTransaccion.setText("");
+        txtNota.setText("");
+    }//GEN-LAST:event_btnCleanActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBuscar;
+    private javax.swing.JButton btnClean;
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnGuardar;
