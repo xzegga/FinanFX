@@ -165,7 +165,7 @@ public class frmTransacciones extends javax.swing.JPanel {
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel9.setText("ID usuario");
 
-        jcbTransactionType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione una opcion", "Deposito Bancario", "Transferencia Bancaria", "Pago de servicios", "Cobro de salario", "Transferencia 365", "Recarga de celular", "Otro" }));
+        jcbTransactionType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--- Seleccione una opción ---", "Deposito Bancario", "Transferencia Bancaria", "Pago de servicios", "Cobro de salario", "Transferencia 365", "Recarga de celular", "Otro" }));
         jcbTransactionType.setPreferredSize(new java.awt.Dimension(64, 16));
         jcbTransactionType.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -173,7 +173,7 @@ public class frmTransacciones extends javax.swing.JPanel {
             }
         });
 
-        jcbCategories.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "---- Seleccione una opcion ----", "Alimentación", "Vivienda", "Transporte", "Entretenimiento", "Salud", "Educación", "Servicios públicos", "Ropa", "Viajes", "Ahorros e inversiones" }));
+        jcbCategories.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--- Seleccione una opción ---", "Alimentación", "Vivienda", "Transporte", "Entretenimiento", "Salud", "Educación", "Servicios públicos", "Ropa", "Viajes", "Ahorros e inversiones", "Otros gastos" }));
         jcbCategories.setPreferredSize(new java.awt.Dimension(64, 16));
 
         btnSearch.setText("Buscar");
@@ -190,7 +190,7 @@ public class frmTransacciones extends javax.swing.JPanel {
             }
         });
 
-        jcbPaymentMethod.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "---- Seleccione una opcion ----", "Efectivo", "Tarjeta", "Cheque" }));
+        jcbPaymentMethod.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--- Seleccione una opción ---", "Efectivo", "Tarjeta", "Cheque" }));
         jcbPaymentMethod.setPreferredSize(new java.awt.Dimension(64, 16));
 
         txtDate.setPreferredSize(new java.awt.Dimension(64, 16));

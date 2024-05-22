@@ -1,5 +1,6 @@
 package finanfx.frm;
 
+import javax.swing.JComboBox;
 import javax.swing.table.TableModel;
 
 /**
@@ -13,6 +14,41 @@ public class frmPresupuestos extends javax.swing.JPanel {
      */
     public frmPresupuestos() {
         initComponents();
+        addPeriodListener();
+    }
+
+    public void addPeriodListener() {
+        // Escuchar cambios en cboPeriodo y llenar cboStart en consecuencia
+        cboPeriodo.addActionListener(e -> getPeriodStart(cboPeriodo, cboStart));
+
+        // Ejemplo de uso: seleccionar un periodo (por ejemplo, "Mensual") y luego imprimir los elementos de cboStart
+        cboPeriodo.setSelectedIndex(0);
+        getPeriodStart(cboPeriodo, cboStart);
+        System.out.println("Elementos de cboStart para Mensual: " + cboStart.getItemCount());
+    }
+
+    public void getPeriodStart(JComboBox<String> cboPeriodo, JComboBox<String> cboStart) {
+        cboStart.removeAllItems(); // Limpiar los elementos existentes en cboStart
+
+        String periodoSeleccionado = cboPeriodo.getSelectedItem().toString(); // Obtener el periodo seleccionado
+
+        // Llenar cboStart según el periodo seleccionado
+        switch (periodoSeleccionado) {
+            case "Mensual", "Quincenal" -> {
+                for (int i = 1; i <= 30; i++) {
+                    cboStart.addItem(String.valueOf(i)); // Agregar números del 1 al 30
+                }
+            }
+            case "Semanal" -> {
+                String[] diasSemana = {"Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"};
+                for (String dia : diasSemana) {
+                    cboStart.addItem(dia); // Agregar días de la semana
+                }
+            }
+            default -> {
+            }
+        }
+        // Si el periodo seleccionado no coincide con ninguno de los casos anteriores, no se agrega nada a cboStart
     }
 
     /**
@@ -38,7 +74,7 @@ public class frmPresupuestos extends javax.swing.JPanel {
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable_Budgets = new javax.swing.JTable();
         cboPeriodo = new javax.swing.JComboBox<>();
-        cboCategories1 = new javax.swing.JComboBox<>();
+        cboStart = new javax.swing.JComboBox<>();
         jLabel6 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 204));
@@ -92,7 +128,7 @@ public class frmPresupuestos extends javax.swing.JPanel {
             }
         });
 
-        cboCategories.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Alimentos", "Transporte", "Vivienda", "Entretenimiento", "Salud", "Educación", "Ahorros", "Otros gastos" }));
+        cboCategories.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--- Seleccione una opción ---", "Alimentación", "Vivienda", "Transporte", "Entretenimiento", "Salud", "Educación", "Servicios públicos", "Ropa", "Viajes", "Ahorros e inversiones", "Otros gastos" }));
         cboCategories.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboCategoriesActionPerformed(evt);
@@ -135,22 +171,21 @@ public class frmPresupuestos extends javax.swing.JPanel {
             jTable_Budgets.getColumnModel().getColumn(4).setResizable(false);
         }
 
-        cboPeriodo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Semanal", "Mensual", "Anual" }));
+        cboPeriodo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Semanal", "Quincenal", "Mensual", " " }));
         cboPeriodo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboPeriodoActionPerformed(evt);
             }
         });
 
-        cboCategories1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Alimentos", "Transporte", "Vivienda", "Entretenimiento", "Salud", "Educación", "Ahorros", "Otros gastos" }));
-        cboCategories1.addActionListener(new java.awt.event.ActionListener() {
+        cboStart.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cboCategories1ActionPerformed(evt);
+                cboStartActionPerformed(evt);
             }
         });
 
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel6.setText("Iniciando");
+        jLabel6.setText("Día o fecha de inicio");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -176,7 +211,7 @@ public class frmPresupuestos extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtMonto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(cboCategories, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cboCategories1, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cboStart, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(cboPeriodo, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
@@ -196,23 +231,23 @@ public class frmPresupuestos extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(14, 14, 14)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(14, 14, 14)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cboPeriodo, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(15, 15, 15)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cboCategories1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cboStart, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cboCategories, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(14, 14, 14)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtMonto, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(28, 28, 28)
@@ -265,9 +300,9 @@ public class frmPresupuestos extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_cboPeriodoActionPerformed
 
-    private void cboCategories1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboCategories1ActionPerformed
+    private void cboStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboStartActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_cboCategories1ActionPerformed
+    }//GEN-LAST:event_cboStartActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -275,8 +310,8 @@ public class frmPresupuestos extends javax.swing.JPanel {
     private javax.swing.JButton btnRemove;
     private javax.swing.JButton btnSaveoOrUpdate;
     private javax.swing.JComboBox<String> cboCategories;
-    private javax.swing.JComboBox<String> cboCategories1;
     private javax.swing.JComboBox<String> cboPeriodo;
+    private javax.swing.JComboBox<String> cboStart;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

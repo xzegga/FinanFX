@@ -53,7 +53,32 @@ public class frmCuentas extends javax.swing.JPanel {
         }
     }
 
+    public boolean validateFields() {
+
+        if (txtTipo.getSelectedIndex() == 0) {
+            JOptionPane.showMessageDialog(this, "Debes seleccoinar unt tipo de cuenta", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        if ("".equals(txtCuenta.getText())) {
+            JOptionPane.showMessageDialog(this, "Ingresa un número de cuenta", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        if (cboBanco.getSelectedIndex() == 0) {
+            JOptionPane.showMessageDialog(this, "Debes seleccoinar el banco para la cuenta ingresada", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        return true;
+    }
+
     private void updateAccount() {
+        boolean valid = validateFields();
+        if (!valid) {
+            return;
+        }
+
         User loggedUser = LoggedInUser.getInstance().getUser();
         int idUsuario = loggedUser.getID();
 
@@ -96,7 +121,7 @@ public class frmCuentas extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Seleccione una cuenta para eliminar", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        
+
         int response = JOptionPane.showConfirmDialog(this,
                 "¿Estás seguro de querer eliminar la cuenta seleccionada?",
                 "Confirmar",
@@ -210,7 +235,7 @@ public class frmCuentas extends javax.swing.JPanel {
 
         jLabel4.setText("Saldo Inicial");
 
-        cboBanco.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Banco de America Central", "Banco Agrícola", "Banco Cuscatlan", "Banco Hipotecario", "Banco Promerica", "Banco Azul" }));
+        cboBanco.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--- Seleccione una opción ---", "Banco de America Central", "Banco Agrícola", "Banco Cuscatlan", "Banco Hipotecario", "Banco Promerica", "Banco Azul" }));
         cboBanco.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboBancoActionPerformed(evt);
@@ -280,7 +305,7 @@ public class frmCuentas extends javax.swing.JPanel {
             jTable_Accounts.getColumnModel().getColumn(4).setResizable(false);
         }
 
-        txtTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ahorros", "Corriente", "Tarjeta de Crédito" }));
+        txtTipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--- Seleccione una opción ---", "Ahorros", "Corriente", "Tarjeta de Crédito" }));
         txtTipo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtTipoActionPerformed(evt);

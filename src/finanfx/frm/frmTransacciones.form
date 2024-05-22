@@ -273,7 +273,7 @@
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="8">
-            <StringItem index="0" value="Seleccione una opcion"/>
+            <StringItem index="0" value="--- Seleccione una opci&#xf3;n ---"/>
             <StringItem index="1" value="Deposito Bancario"/>
             <StringItem index="2" value="Transferencia Bancaria"/>
             <StringItem index="3" value="Pago de servicios"/>
@@ -297,8 +297,8 @@
     <Component class="javax.swing.JComboBox" name="jcbCategories">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="11">
-            <StringItem index="0" value="---- Seleccione una opcion ----"/>
+          <StringArray count="12">
+            <StringItem index="0" value="--- Seleccione una opci&#xf3;n ---"/>
             <StringItem index="1" value="Alimentaci&#xf3;n"/>
             <StringItem index="2" value="Vivienda"/>
             <StringItem index="3" value="Transporte"/>
@@ -309,6 +309,7 @@
             <StringItem index="8" value="Ropa"/>
             <StringItem index="9" value="Viajes"/>
             <StringItem index="10" value="Ahorros e inversiones"/>
+            <StringItem index="11" value="Otros gastos"/>
           </StringArray>
         </Property>
         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
@@ -339,7 +340,7 @@
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="4">
-            <StringItem index="0" value="---- Seleccione una opcion ----"/>
+            <StringItem index="0" value="--- Seleccione una opci&#xf3;n ---"/>
             <StringItem index="1" value="Efectivo"/>
             <StringItem index="2" value="Tarjeta"/>
             <StringItem index="3" value="Cheque"/>

@@ -181,13 +181,14 @@
     <Component class="javax.swing.JComboBox" name="cboBanco">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="6">
-            <StringItem index="0" value="Banco de America Central"/>
-            <StringItem index="1" value="Banco Agr&#xed;cola"/>
-            <StringItem index="2" value="Banco Cuscatlan"/>
-            <StringItem index="3" value="Banco Hipotecario"/>
-            <StringItem index="4" value="Banco Promerica"/>
-            <StringItem index="5" value="Banco Azul"/>
+          <StringArray count="7">
+            <StringItem index="0" value="--- Seleccione una opci&#xf3;n ---"/>
+            <StringItem index="1" value="Banco de America Central"/>
+            <StringItem index="2" value="Banco Agr&#xed;cola"/>
+            <StringItem index="3" value="Banco Cuscatlan"/>
+            <StringItem index="4" value="Banco Hipotecario"/>
+            <StringItem index="5" value="Banco Promerica"/>
+            <StringItem index="6" value="Banco Azul"/>
           </StringArray>
         </Property>
       </Properties>
@@ -292,10 +293,11 @@
     <Component class="javax.swing.JComboBox" name="txtTipo">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="3">
-            <StringItem index="0" value="Ahorros"/>
-            <StringItem index="1" value="Corriente"/>
-            <StringItem index="2" value="Tarjeta de Cr&#xe9;dito"/>
+          <StringArray count="4">
+            <StringItem index="0" value="--- Seleccione una opci&#xf3;n ---"/>
+            <StringItem index="1" value="Ahorros"/>
+            <StringItem index="2" value="Corriente"/>
+            <StringItem index="3" value="Tarjeta de Cr&#xe9;dito"/>
           </StringArray>
         </Property>
       </Properties>
