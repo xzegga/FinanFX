@@ -100,4 +100,14 @@ public class User {
         this.estado = estado;
         this.fechaRegistro = fechaRegistro;
     }
+    
+    public User(int Id, String nombre, String apellido, Date fechaNacimiento, String email, String telefono, String estado) {
+        this.ID = Id;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.fechaNacimiento = fechaNacimiento;
+        this.email = email;
+        this.telefono = telefono;
+        this.estado = estado;
+    }
 }

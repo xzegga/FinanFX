@@ -125,7 +125,7 @@ public class frmClave extends javax.swing.JFrame {
         {
             Usuarios obj1 = new Usuarios();
             
-            obj1.changeClave(txtCorreo.getText(),txtClave.getText(),txtCambiarClave.getText(),txtVClave.getText());
+            obj1.resetPassword(txtCorreo.getText(),txtClave.getText(),txtCambiarClave.getText(),txtVClave.getText());
              JOptionPane.showMessageDialog(this, "Clave cambiada exitosamente");
             
         }catch(Exception x)

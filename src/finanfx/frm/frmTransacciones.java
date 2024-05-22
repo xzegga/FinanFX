@@ -30,6 +30,7 @@ public class frmTransacciones extends javax.swing.JPanel {
 
     /**
      * Creates new form frmTransacciones
+     * @throws java.sql.SQLException
      */
     public frmTransacciones() throws SQLException {
         initComponents();

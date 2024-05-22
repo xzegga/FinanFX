@@ -41,7 +41,7 @@ public class Usuarios {
         }
     }
 
-    public static void changeClave(String email, String Contra, String NContra, String VContra) throws SQLException {
+    public static void resetPassword(String email, String Contra, String NContra, String VContra) throws SQLException {
         try (
                 Connection connection = DatabaseConnection.getConnection(); CallableStatement statement = connection.prepareCall("{call SP_ResetearContrasena(?,?,?,?,?)}")) {
 

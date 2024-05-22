@@ -1,7 +1,6 @@
 package finanfx.models;
 
 import java.sql.Date;
-import java.text.SimpleDateFormat;
 
 public class Transacciones {
     private int ID_Transaccion;

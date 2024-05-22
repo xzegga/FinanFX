@@ -1,5 +1,7 @@
 package finanfx.frm;
 
+import finanfx.models.User;
+import finanfx.state.LoggedInUser;
 import java.awt.Dimension;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -11,12 +13,16 @@ import java.util.logging.Logger;
  */
 public class frmMenu extends javax.swing.JFrame {
 
+    User loggedUser = LoggedInUser.getInstance().getUser();
     /**
      * Creates new form frmMenu
      */
     public frmMenu() {
         initComponents();
         this.setLocationRelativeTo(null);
+        
+        String nombreCompleto = "Bienvenido " + loggedUser.getNombre() + " " +  loggedUser.getApellido();
+        lblWelcome.setText(nombreCompleto);
     }
 
     public void Apagado() throws SQLException {
@@ -31,8 +37,7 @@ public class frmMenu extends javax.swing.JFrame {
         frmNotas note = new frmNotas();
         note.setVisible(false);
         content.removeAll();
-        frmLogin Logeo = new frmLogin();
-
+        frmLogin Logueo = new frmLogin();
     }
 
     /**
@@ -44,7 +49,7 @@ public class frmMenu extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        lblHello = new javax.swing.JLabel();
+        lblWelcome = new javax.swing.JLabel();
         content = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu5 = new javax.swing.JMenu();
@@ -65,9 +70,9 @@ public class frmMenu extends javax.swing.JFrame {
         setMinimumSize(new java.awt.Dimension(550, 600));
         getContentPane().setLayout(null);
 
-        lblHello.setText("Bienvenido (Nombre de usuario)");
-        getContentPane().add(lblHello);
-        lblHello.setBounds(20, 510, 172, 16);
+        lblWelcome.setText("Bienvenido (Nombre de usuario)");
+        getContentPane().add(lblWelcome);
+        lblWelcome.setBounds(20, 510, 250, 16);
 
         content.setBackground(new java.awt.Color(255, 255, 204));
         getContentPane().add(content);
@@ -294,7 +299,7 @@ public class frmMenu extends javax.swing.JFrame {
     public frmMenu(String Username) {
         initComponents();
         this.UserName = Username;
-        lblHello.setText("Bienvenido, " + Username + " !");
+        lblWelcome.setText("Bienvenido, " + Username + " !");
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -313,6 +318,6 @@ public class frmMenu extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
-    private javax.swing.JLabel lblHello;
+    private javax.swing.JLabel lblWelcome;
     // End of variables declaration//GEN-END:variables
 }

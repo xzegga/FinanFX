@@ -7,7 +7,7 @@ package finanfx.models;
 public class Cuenta {
 
     private int idCuenta;
-    private Integer idUsuario;
+    private int idUsuario;
     private String tipoCuenta;
     private String numeroCuenta;
     private String nombreBanco;
@@ -19,6 +19,15 @@ public class Cuenta {
     }
 
     public Cuenta(String tipoCuenta, String numeroCuenta, String nombreBanco, Double saldoInicial) {
+        this.tipoCuenta = tipoCuenta;
+        this.numeroCuenta = numeroCuenta != null ? numeroCuenta : null;
+        this.nombreBanco = nombreBanco;
+        this.saldoInicial = saldoInicial;
+    }
+
+    public Cuenta(int idCuenta, int idUsuario, String tipoCuenta, String numeroCuenta, String nombreBanco, Double saldoInicial) {
+        this.idCuenta = idCuenta;
+        this.idUsuario = idUsuario;
         this.tipoCuenta = tipoCuenta;
         this.numeroCuenta = numeroCuenta != null ? numeroCuenta : null;
         this.nombreBanco = nombreBanco;
