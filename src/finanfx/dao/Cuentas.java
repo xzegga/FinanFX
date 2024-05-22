@@ -47,7 +47,7 @@ public class Cuentas {
         return cuentas;
     }
 
-    public void createCuenta(Cuenta cuenta, int idUsuario) throws SQLException {
+    public void createAccount(Cuenta cuenta, int idUsuario) throws SQLException {
         try {
             connection = DatabaseConnection.getConnection();
             statement = connection.prepareCall("{CALL SP_CrearCuentaFinanciera(?, ?, ?, ?, ?, ?)}");
@@ -87,7 +87,7 @@ public class Cuentas {
         }
     }
 
-    public void removeAccount(int idCuenta) throws SQLException {
+    public void deleteAccount(int idCuenta) throws SQLException {
         try {
             connection = DatabaseConnection.getConnection();
             statement = connection.prepareCall("{CALL SP_EliminarCuentaFinanciera(?)}");

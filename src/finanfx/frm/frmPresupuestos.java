@@ -1,24 +1,126 @@
 package finanfx.frm;
 
+import finanfx.dao.Presupuestos;
+import finanfx.models.Presupuesto;
+import finanfx.models.User;
+import finanfx.state.LoggedInUser;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 /**
- *
  * @author Ander
  */
 public class frmPresupuestos extends javax.swing.JPanel {
-
+    Presupuestos budgetService = new Presupuestos();
+    
     /**
      * Creates new form frmPresupuestos
      */
     public frmPresupuestos() {
         initComponents();
+        loadData();
         addPeriodListener();
     }
 
-    public void addPeriodListener() {
+    public final void loadData() {
+        try {
+            User loggedUser = LoggedInUser.getInstance().getUser();
+            int idUsuario = loggedUser.getID();
+            ArrayList<Presupuesto> budgets = budgetService.listBudgetsByUserId(idUsuario);
+
+            DefaultTableModel model = (DefaultTableModel) jTable_Budgets.getModel();
+            model.setRowCount(0);
+
+            for (Presupuesto budget : budgets) {
+                Object[] row = {
+                    budget.getID_Presupuesto(),
+                    budget.getPeriodo(),
+                    budget.getInicio(),
+                    budget.getCategoria(),
+                    budget.getMonto_Presupuestado()
+                };
+                model.addRow(row); 
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(frmPresupuestos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void updateBudget() {
+        if (!validateFields()) {
+            return;
+        }
+
+        User loggedUser = LoggedInUser.getInstance().getUser();
+        int idUsuario = loggedUser.getID();
+
+        String id = txtId.getText();
+        int idBudget = (id != null && id.matches("\\d+")) ? Integer.parseInt(id) : 0;
+
+        String textMonto = clearNonNumeric(txtMonto.getText());
+        Double monto = Double.valueOf(textMonto);
+        String command = btnSaveoOrUpdate.getText();
+
+        Presupuesto budget;
+        budget = new Presupuesto(
+                idBudget,
+                idUsuario,
+                (String) cboPeriodo.getSelectedItem(),
+                (String) cboStart.getSelectedItem(),
+                (String) cboCategories.getSelectedItem(),
+                monto
+        );
+        try {
+            if (command.equals("Actualizar")) {
+                budgetService.updateBudget(budget);
+                JOptionPane.showMessageDialog(this, "Presupuesto actualizado con éxito");
+            } else {
+                budgetService.createBudget(budget);
+                JOptionPane.showMessageDialog(this, "Presupuesto guardado con éxito");
+            }
+            loadData();
+            clearTextBox();
+        } catch (SQLException ex) {
+            Logger.getLogger(frmPresupuestos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+        // Método para eliminar un presupuesto por su ID desde la base de datos
+    private void removeBudget() {
+        String id = txtId.getText();
+        int idBudget = (id != null && id.matches("\\d+")) ? Integer.parseInt(id) : 0;
+
+        if (idBudget == 0) {
+            JOptionPane.showMessageDialog(this, "Seleccione un presupuesto para eliminar", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        int response = JOptionPane.showConfirmDialog(this,
+                "¿Estás seguro de querer eliminar el presupuesto seleccionado?",
+                "Confirmar",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
+
+        if (response == JOptionPane.YES_OPTION) {
+            try {
+                budgetService.deleteBudget(idBudget);
+                JOptionPane.showMessageDialog(this, "Presupuesto eliminado con éxito");
+                loadData();
+                clearTextBox();
+            } catch (SQLException ex) {
+                Logger.getLogger(frmPresupuestos.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this, "Error al eliminar el Presupuesto", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+    
+    public final void addPeriodListener() {
         // Escuchar cambios en cboPeriodo y llenar cboStart en consecuencia
         cboPeriodo.addActionListener(e -> getPeriodStart(cboPeriodo, cboStart));
 
@@ -69,8 +171,30 @@ public class frmPresupuestos extends javax.swing.JPanel {
         }
         
         return true;
-    }
+    } 
 
+    private String clearNonNumeric(String text) {
+        // Get the character entered
+        StringBuilder builder = new StringBuilder();
+        for (char c : text.toCharArray()) {
+            if (Character.isDigit(c) || c == '.') {
+                builder.append(c);
+            }
+        }
+        return builder.toString();
+    }
+    
+    private void clearTextBox() {
+        txtId.setText(null);
+        txtMonto.setText(null);
+        cboPeriodo.setSelectedIndex(0);
+        cboCategories.setSelectedIndex(0);
+        btnSaveoOrUpdate.setText("Guardar");
+        btnRemove.setEnabled(false);        
+        addPeriodListener();
+    }
+        
+        
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -282,7 +406,7 @@ public class frmPresupuestos extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSaveoOrUpdateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSaveoOrUpdateMouseClicked
-        //updateAccount();
+        updateBudget();
     }//GEN-LAST:event_btnSaveoOrUpdateMouseClicked
 
     private void btnSaveoOrUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveoOrUpdateActionPerformed
@@ -290,11 +414,11 @@ public class frmPresupuestos extends javax.swing.JPanel {
     }//GEN-LAST:event_btnSaveoOrUpdateActionPerformed
 
     private void btnCancelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelMouseClicked
-        //clearTextBox();
+        clearTextBox();
     }//GEN-LAST:event_btnCancelMouseClicked
 
     private void btnRemoveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRemoveMouseClicked
-        //removeAccount();
+        removeBudget();
     }//GEN-LAST:event_btnRemoveMouseClicked
 
     private void txtIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIdActionPerformed
@@ -310,10 +434,14 @@ public class frmPresupuestos extends javax.swing.JPanel {
         TableModel model = jTable_Budgets.getModel();
 
         txtId.setText(model.getValueAt(index, 0).toString());
-        cboCategories.setSelectedItem(model.getValueAt(index, 1).toString());
+        cboPeriodo.setSelectedItem(model.getValueAt(index, 1).toString());
+        cboStart.setSelectedItem(model.getValueAt(index, 2).toString());
+        cboCategories.setSelectedItem(model.getValueAt(index, 3).toString());
+        txtMonto.setText(model.getValueAt(index, 4).toString());
 
         btnSaveoOrUpdate.setText("Actualizar");
         btnRemove.setEnabled(true);
+        
     }//GEN-LAST:event_jTable_BudgetsMouseClicked
 
     private void cboPeriodoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboPeriodoActionPerformed

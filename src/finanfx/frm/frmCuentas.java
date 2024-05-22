@@ -102,7 +102,7 @@ public class frmCuentas extends javax.swing.JPanel {
                 accountService.updateCuenta(cuenta, idCuenta);
                 JOptionPane.showMessageDialog(this, "Cuenta actualizada con éxito");
             } else {
-                accountService.createCuenta(cuenta, idUsuario);
+                accountService.createAccount(cuenta, idUsuario);
                 JOptionPane.showMessageDialog(this, "Cuenta guardada con éxito");
             }
             loadData();
@@ -129,7 +129,7 @@ public class frmCuentas extends javax.swing.JPanel {
 
         if (response == JOptionPane.YES_OPTION) {
             try {
-                accountService.removeAccount(idCuenta);
+                accountService.deleteAccount(idCuenta);
                 JOptionPane.showMessageDialog(this, "Cuenta eliminada con éxito");
                 loadData();
                 clearTextBox();
