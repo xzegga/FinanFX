@@ -377,9 +377,9 @@ public class frmCuentas extends javax.swing.JPanel {
                     .addComponent(btnSaveoOrUpdate)
                     .addComponent(btnCancel)
                     .addComponent(btnRemove))
-                .addGap(37, 37, 37)
+                .addGap(50, 50, 50)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(51, Short.MAX_VALUE))
+                .addContainerGap(38, Short.MAX_VALUE))
         );
 
         layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cboBanco, txtCuenta, txtId});
