@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package finanfx.frm;
 
 import java.awt.Dimension;
@@ -9,13 +5,10 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
-
 /**
  *
  * @author Ander
  */
-
 public class frmMenu extends javax.swing.JFrame {
 
     /**
@@ -25,9 +18,8 @@ public class frmMenu extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
     }
-    
-    public void Apagado() throws SQLException
-    {
+
+    public void Apagado() throws SQLException {
         frmCuentas cuenta = new frmCuentas();
         cuenta.setVisible(false);
         frmPerfil perfil = new frmPerfil();
@@ -36,16 +28,11 @@ public class frmMenu extends javax.swing.JFrame {
         presupuesto.setVisible(false);
         frmTransacciones Transacciones = new frmTransacciones();
         Transacciones.setVisible(false);
-        frmNotas note =new frmNotas();
+        frmNotas note = new frmNotas();
         note.setVisible(false);
         content.removeAll();
         frmLogin Logeo = new frmLogin();
-        
-        /*if(Logeo.Control == 0)
-        {
-            Logeo.setVisible(true);
-            this.dispose();
-        }*/
+
     }
 
     /**
@@ -75,17 +62,19 @@ public class frmMenu extends javax.swing.JFrame {
         jMenuItem6 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMinimumSize(new java.awt.Dimension(550, 500));
-        setResizable(false);
+        setMinimumSize(new java.awt.Dimension(550, 600));
         getContentPane().setLayout(null);
 
         lblHello.setText("Bienvenido (Nombre de usuario)");
         getContentPane().add(lblHello);
-        lblHello.setBounds(328, 415, 172, 16);
+        lblHello.setBounds(20, 510, 172, 16);
 
         content.setBackground(new java.awt.Color(255, 255, 204));
         getContentPane().add(content);
-        content.setBounds(0, 0, 550, 540);
+        content.setBounds(0, 0, 560, 570);
+
+        jMenuBar1.setMaximumSize(new java.awt.Dimension(650, 32768));
+        jMenuBar1.setPreferredSize(new java.awt.Dimension(560, 23));
 
         jMenu5.setText("Cuentas");
 
@@ -166,118 +155,103 @@ public class frmMenu extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnTransaccionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTransaccionesActionPerformed
-        try
-        {
-            // TODO add your handling code here:
+        try {
             Apagado();
-        } catch (SQLException ex)
-        {
+        } catch (SQLException ex) {
             Logger.getLogger(frmMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
+
         frmTransacciones Transaccion = null;
-        try
-        {
+
+        try {
             Transaccion = new frmTransacciones();
-        } catch (SQLException ex)
-        {
+        } catch (SQLException ex) {
             Logger.getLogger(frmMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
+
         content.add(Transaccion);
         Dimension tCont = content.getSize();
         Dimension tiFrame = Transaccion.getSize();
-        Transaccion.setLocation((tCont.width - tiFrame.width)/2, (tCont.height - tiFrame.height)/2);
+
+        Transaccion.setLocation((tCont.width - tiFrame.width) / 2, (tCont.height - tiFrame.height) / 2);
         content.revalidate();
-        Transaccion.setVisible(true); 
+        Transaccion.setVisible(true);
     }//GEN-LAST:event_btnTransaccionesActionPerformed
 
     private void btnPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPerfilActionPerformed
-        try
-        {
-            // TODO add your handling code here:
+        try {
             Apagado();
-        } catch (SQLException ex)
-        {
+        } catch (SQLException ex) {
             Logger.getLogger(frmMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
-        frmPerfil Info= new frmPerfil();
+        
+        frmPerfil Info = new frmPerfil();
         content.add(Info);
         Dimension tCont = content.getSize();
         Dimension tiFrame = Info.getSize();
-        Info.setLocation((tCont.width - tiFrame.width)/2, (tCont.height - tiFrame.height)/2);
+        Info.setLocation((tCont.width - tiFrame.width) / 2, (tCont.height - tiFrame.height) / 2);
         content.revalidate();
-        Info.setVisible(true); 
+        Info.setVisible(true);
     }//GEN-LAST:event_btnPerfilActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        try
-        {
-            // TODO add your handling code here:
+        try {
             Apagado();
-        } catch (SQLException ex)
-        {
+        } catch (SQLException ex) {
             Logger.getLogger(frmMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
         frmCuentas Banco = new frmCuentas();
         content.add(Banco);
         Dimension tCont = content.getSize();
         Dimension tiFrame = Banco.getSize();
-        Banco.setLocation((tCont.width - tiFrame.width)/2, (tCont.height - tiFrame.height)/2);
+        Banco.setLocation((tCont.width - tiFrame.width) / 2, (tCont.height - tiFrame.height) / 2);
         content.revalidate();
-        Banco.setVisible(true); 
+        Banco.setVisible(true);
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void btnNotasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNotasActionPerformed
-        try
-        {
-            // TODO add your handling code here:
+        try {
             Apagado();
-        } catch (SQLException ex)
-        {
+        } catch (SQLException ex) {
             Logger.getLogger(frmMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
         frmNotas note = new frmNotas();
         content.add(note);
         Dimension tCont = content.getSize();
         Dimension tiFrame = note.getSize();
-        note.setLocation((tCont.width - tiFrame.width)/2, (tCont.height - tiFrame.height)/2);
+        note.setLocation((tCont.width - tiFrame.width) / 2, (tCont.height - tiFrame.height) / 2);
         content.revalidate();
-        note.setVisible(true); 
+        note.setVisible(true);
     }//GEN-LAST:event_btnNotasActionPerformed
 
     private void btnPresupuestoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPresupuestoActionPerformed
-        try
-        {
-            // TODO add your handling code here:
+        try {
             Apagado();
-        } catch (SQLException ex)
-        {
+        } catch (SQLException ex) {
             Logger.getLogger(frmMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
         frmPresupuestos Presupuestos = new frmPresupuestos();
         content.add(Presupuestos);
         Dimension tCont = content.getSize();
         Dimension tiFrame = Presupuestos.getSize();
-        Presupuestos.setLocation((tCont.width - tiFrame.width)/2, (tCont.height - tiFrame.height)/2);
+        Presupuestos.setLocation((tCont.width - tiFrame.width) / 2, (tCont.height - tiFrame.height) / 2);
         content.revalidate();
-        Presupuestos.setVisible(true); 
+        Presupuestos.setVisible(true);
     }//GEN-LAST:event_btnPresupuestoActionPerformed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
-        try
-        {
-            // TODO add your handling code here:
+        try {
             Apagado();
-        } catch (SQLException ex)
-        {
+        } catch (SQLException ex) {
             Logger.getLogger(frmMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
         frmPresupuestos Presupuestos = new frmPresupuestos();
         content.add(Presupuestos);
         Dimension tCont = content.getSize();
         Dimension tiFrame = Presupuestos.getSize();
-        Presupuestos.setLocation((tCont.width - tiFrame.width)/2, (tCont.height - tiFrame.height)/2);
+        Presupuestos.setLocation((tCont.width - tiFrame.width) / 2, (tCont.height - tiFrame.height) / 2);
         content.revalidate();
-        Presupuestos.setVisible(true); 
+        Presupuestos.setVisible(true);
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     /**
@@ -314,12 +288,13 @@ public class frmMenu extends javax.swing.JFrame {
             }
         });
     }
-    
+
     private String UserName;
-    public frmMenu(String Username){
+
+    public frmMenu(String Username) {
         initComponents();
         this.UserName = Username;
-        lblHello.setText("Bienvenido, "+Username+" !");
+        lblHello.setText("Bienvenido, " + Username + " !");
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

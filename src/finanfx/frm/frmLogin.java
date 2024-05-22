@@ -1,40 +1,21 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package finanfx.frm;
+
 /**
  *
  * @author Ander
  */
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import javax.swing.JOptionPane;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.SQLException;
-import finanfx.data.DatabaseConnection;
 import finanfx.dao.Login;
-import finanfx.data.DatabaseConfig;
-import java.sql.ResultSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 
 public class frmLogin extends javax.swing.JFrame {
 
-    
-    
     public frmLogin() {
         initComponents();
-        this.setLocationRelativeTo(null);//Para centrar el form
-    
+        //Centrar el form
+        this.setLocationRelativeTo(null);
+
     }
-     public static int Miembro = 0;
-    
+    public static int Miembro = 0;
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -127,40 +108,33 @@ public class frmLogin extends javax.swing.JFrame {
     }//GEN-LAST:event_txtClaveActionPerformed
 
     private void btnAccederActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAccederActionPerformed
-        // TODO add your handling code here:
-        try{
+        try {
             Login obj1 = new Login();
-            if(obj1.validateUserLogin(txtUsuario.getText(),txtClave.getText())>0)
-            {
-                Miembro = obj1.validateUserLogin(txtUsuario.getText(),txtClave.getText());
+            if (obj1.validateUserLogin(txtUsuario.getText(), txtClave.getText()) > 0) {
+                Miembro = obj1.validateUserLogin(txtUsuario.getText(), txtClave.getText());
                 frmMenu menu = new frmMenu();
                 menu.setVisible(true);
                 this.hide();
-            }else
-            {
+            } else {
                 JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos");
             }
-            
-        }catch(Exception x)
-        {
+
+        } catch (Exception x) {
             JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos");
         }
     }//GEN-LAST:event_btnAccederActionPerformed
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
-        // TODO add your handling code here:
         this.dispose();
     }//GEN-LAST:event_btnSalirActionPerformed
 
     private void lblCambiarClaveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCambiarClaveMouseClicked
-        // TODO add your handling code here:
         frmClave contra = new frmClave();
         contra.setVisible(true);
         this.hide();
     }//GEN-LAST:event_lblCambiarClaveMouseClicked
 
     private void lblRegistrarCuentaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblRegistrarCuentaMouseClicked
-        // TODO add your handling code here:
         frmRegistroUsuario ruser = new frmRegistroUsuario();
         ruser.setVisible(true);
         this.hide();
@@ -200,7 +174,7 @@ public class frmLogin extends javax.swing.JFrame {
             }
         });
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAcceder;
     private javax.swing.JButton btnSalir;

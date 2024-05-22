@@ -1,8 +1,6 @@
 package finanfx.dao;
 
-import finanfx.data.DatabaseConfig;
 import java.sql.Date;
-import java.time.LocalDate;
 import java.sql.ResultSet;
 import finanfx.data.DatabaseConnection;
 import java.sql.Connection;
