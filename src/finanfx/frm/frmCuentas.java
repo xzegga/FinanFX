@@ -4,14 +4,11 @@ import finanfx.dao.Cuentas;
 import finanfx.models.Cuenta;
 import finanfx.models.User;
 import finanfx.state.LoggedInUser;
-import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
@@ -28,6 +25,7 @@ public class frmCuentas extends javax.swing.JPanel {
      */
     public frmCuentas() {
         initComponents();
+        clearTextBox();
         loadData();
     }
 
@@ -38,7 +36,7 @@ public class frmCuentas extends javax.swing.JPanel {
             ArrayList<Cuenta> cuentas = accountService.getAccounntsByUserId(idUsuario);
 
             DefaultTableModel model = (DefaultTableModel) jTable_Accounts.getModel();
-            model.setRowCount(0); // Clear existing data
+            model.setRowCount(0);
 
             for (Cuenta cuenta : cuentas) {
                 Object[] row = {
@@ -62,8 +60,9 @@ public class frmCuentas extends javax.swing.JPanel {
         String id = txtId.getText();
         int idCuenta = (id != null && id.matches("\\d+")) ? Integer.parseInt(id) : 0;
 
-        Double saldo = Double.valueOf(txtSaldo.getText());
-        String command = SaveOrCreate.getText();
+        String textSaldo = clearNonNumeric(txtSaldo.getText());
+        Double saldo = Double.valueOf(textSaldo);
+        String command = btnSaveoOrUpdate.getText();
 
         Cuenta cuenta;
         cuenta = new Cuenta(
@@ -89,18 +88,43 @@ public class frmCuentas extends javax.swing.JPanel {
         }
     }
 
-    private void validateDoubleInput(KeyEvent evt) {
-        // Get the character entered
-        char c = evt.getKeyChar();
+    private void removeAccount() {
+        String id = txtId.getText();
+        int idCuenta = (id != null && id.matches("\\d+")) ? Integer.parseInt(id) : 0;
 
-        // Allow backspace, decimal point, and digits (0-9)
-        if (Character.isDigit(c) || c == KeyEvent.VK_BACK_SPACE || c == '.') {
-            // Allow the character to be entered
+        if (idCuenta == 0) {
+            JOptionPane.showMessageDialog(this, "Seleccione una cuenta para eliminar", "Error", JOptionPane.ERROR_MESSAGE);
             return;
-        } else {
-            // Consume the event to prevent invalid character input
-            evt.consume();
         }
+        
+        int response = JOptionPane.showConfirmDialog(this,
+                "¿Estás seguro de querer eliminar la cuenta seleccionada?",
+                "Confirmar",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
+
+        if (response == JOptionPane.YES_OPTION) {
+            try {
+                accountService.removeAccount(idCuenta);
+                JOptionPane.showMessageDialog(this, "Cuenta eliminada con éxito");
+                loadData();
+                clearTextBox();
+            } catch (SQLException ex) {
+                Logger.getLogger(frmCuentas.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this, "Error al eliminar la cuenta", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private String clearNonNumeric(String text) {
+        // Get the character entered
+        StringBuilder builder = new StringBuilder();
+        for (char c : text.toCharArray()) {
+            if (Character.isDigit(c) || c == '.') {
+                builder.append(c);
+            }
+        }
+        return builder.toString();
     }
 
     private void clearTextBox() {
@@ -109,7 +133,8 @@ public class frmCuentas extends javax.swing.JPanel {
         txtSaldo.setText(null);
         txtTipo.setSelectedIndex(0);
         cboBanco.setSelectedIndex(0);
-        SaveOrCreate.setText("Guardar");
+        btnSaveoOrUpdate.setText("Guardar");
+        btnRemove.setEnabled(false);
     }
 
     /**
@@ -124,15 +149,15 @@ public class frmCuentas extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         txtCuenta = new javax.swing.JTextField();
-        SaveOrCreate = new javax.swing.JButton();
+        btnSaveoOrUpdate = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         cboBanco = new javax.swing.JComboBox<>();
-        jButton4 = new javax.swing.JButton();
+        btnRemove = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        jButton5 = new javax.swing.JButton();
+        btnCancel = new javax.swing.JButton();
         txtId = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -161,15 +186,15 @@ public class frmCuentas extends javax.swing.JPanel {
             }
         });
 
-        SaveOrCreate.setText("Guardar");
-        SaveOrCreate.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnSaveoOrUpdate.setText("Guardar");
+        btnSaveoOrUpdate.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                SaveOrCreateMouseClicked(evt);
+                btnSaveoOrUpdateMouseClicked(evt);
             }
         });
-        SaveOrCreate.addActionListener(new java.awt.event.ActionListener() {
+        btnSaveoOrUpdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SaveOrCreateActionPerformed(evt);
+                btnSaveoOrUpdateActionPerformed(evt);
             }
         });
 
@@ -192,11 +217,21 @@ public class frmCuentas extends javax.swing.JPanel {
             }
         });
 
-        jButton4.setText("Editar");
+        btnRemove.setText("Eliminar");
+        btnRemove.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnRemoveMouseClicked(evt);
+            }
+        });
 
         jLabel1.setText("Tipo de cuenta");
 
-        jButton5.setText("Eliminar");
+        btnCancel.setText("Cancelar");
+        btnCancel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnCancelMouseClicked(evt);
+            }
+        });
 
         txtId.setEditable(false);
         txtId.addActionListener(new java.awt.event.ActionListener() {
@@ -261,6 +296,12 @@ public class frmCuentas extends javax.swing.JPanel {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtSaldoKeyPressed(evt);
             }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtSaldoKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtSaldoKeyTyped(evt);
+            }
         });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -270,37 +311,36 @@ public class frmCuentas extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(102, 102, 102)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING))
+                                .addGap(25, 25, 25)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(cboBanco, 0, 206, Short.MAX_VALUE)
+                                    .addComponent(txtCuenta)
+                                    .addComponent(txtTipo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtSaldo))
+                                .addGap(1, 1, 1))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnSaveoOrUpdate)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnCancel)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnRemove))))
+                    .addGroup(layout.createSequentialGroup()
                         .addGap(11, 11, 11)
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(82, 82, 82)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 402, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING))
-                                        .addGap(25, 25, 25)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(cboBanco, 0, 206, Short.MAX_VALUE)
-                                            .addComponent(txtCuenta)
-                                            .addComponent(txtTipo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(txtSaldo))
-                                        .addGap(1, 1, 1))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(SaveOrCreate)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jButton5)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jButton4)))
-                                .addGap(72, 72, 72)))))
-                .addContainerGap(80, Short.MAX_VALUE))
+                        .addGap(60, 60, 60)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 443, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(61, Short.MAX_VALUE))
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {cboBanco, txtCuenta});
@@ -334,21 +374,21 @@ public class frmCuentas extends javax.swing.JPanel {
                     .addComponent(txtSaldo, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(SaveOrCreate)
-                    .addComponent(jButton5)
-                    .addComponent(jButton4))
+                    .addComponent(btnSaveoOrUpdate)
+                    .addComponent(btnCancel)
+                    .addComponent(btnRemove))
                 .addGap(37, 37, 37)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(89, Short.MAX_VALUE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(51, Short.MAX_VALUE))
         );
 
         layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {cboBanco, txtCuenta, txtId});
 
     }// </editor-fold>//GEN-END:initComponents
 
-    private void SaveOrCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaveOrCreateActionPerformed
+    private void btnSaveoOrUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveoOrUpdateActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_SaveOrCreateActionPerformed
+    }//GEN-LAST:event_btnSaveoOrUpdateActionPerformed
 
     private void txtCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCuentaActionPerformed
         // TODO add your handling code here:
@@ -375,12 +415,13 @@ public class frmCuentas extends javax.swing.JPanel {
         txtCuenta.setText(model.getValueAt(index, 2).toString());
         cboBanco.setSelectedItem(model.getValueAt(index, 3).toString());
         txtSaldo.setText(model.getValueAt(index, 4).toString());
-        SaveOrCreate.setText("Actualizar");
+        btnSaveoOrUpdate.setText("Actualizar");
+        btnRemove.setEnabled(true);
     }//GEN-LAST:event_jTable_AccountsMouseClicked
 
-    private void SaveOrCreateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SaveOrCreateMouseClicked
+    private void btnSaveoOrUpdateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSaveoOrUpdateMouseClicked
         updateAccount();
-    }//GEN-LAST:event_SaveOrCreateMouseClicked
+    }//GEN-LAST:event_btnSaveoOrUpdateMouseClicked
 
     private void txtSaldoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSaldoActionPerformed
         // TODO add your handling code here:
@@ -390,12 +431,26 @@ public class frmCuentas extends javax.swing.JPanel {
 
     }//GEN-LAST:event_txtSaldoKeyPressed
 
+    private void txtSaldoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSaldoKeyReleased
+    }//GEN-LAST:event_txtSaldoKeyReleased
+
+    private void txtSaldoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSaldoKeyTyped
+    }//GEN-LAST:event_txtSaldoKeyTyped
+
+    private void btnCancelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelMouseClicked
+        clearTextBox();
+    }//GEN-LAST:event_btnCancelMouseClicked
+
+    private void btnRemoveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRemoveMouseClicked
+        removeAccount();
+    }//GEN-LAST:event_btnRemoveMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton SaveOrCreate;
+    private javax.swing.JButton btnCancel;
+    private javax.swing.JButton btnRemove;
+    private javax.swing.JButton btnSaveoOrUpdate;
     private javax.swing.JComboBox<String> cboBanco;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
