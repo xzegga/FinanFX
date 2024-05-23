@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -14,14 +15,15 @@ import java.util.logging.Logger;
 public class frmMenu extends javax.swing.JFrame {
 
     User loggedUser = LoggedInUser.getInstance().getUser();
+
     /**
      * Creates new form frmMenu
      */
     public frmMenu() {
         initComponents();
         this.setLocationRelativeTo(null);
-        
-        String nombreCompleto = "Bienvenido " + loggedUser.getNombre() + " " +  loggedUser.getApellido();
+
+        String nombreCompleto = "Bienvenido " + loggedUser.getNombre() + " " + loggedUser.getApellido();
         lblWelcome.setText(nombreCompleto);
     }
 
@@ -53,17 +55,14 @@ public class frmMenu extends javax.swing.JFrame {
         content = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu5 = new javax.swing.JMenu();
-        jMenuItem2 = new javax.swing.JMenuItem();
-        btnPresupuesto = new javax.swing.JMenuItem();
-        btnNotas = new javax.swing.JMenuItem();
-        btnPerfil1 = new javax.swing.JMenuItem();
-        btnTransacciones = new javax.swing.JMenuItem();
+        menuCuentasBancarias = new javax.swing.JMenuItem();
+        menuPresupuestos = new javax.swing.JMenuItem();
+        menuNotas = new javax.swing.JMenuItem();
+        menuPerfil = new javax.swing.JMenuItem();
+        menuTransacciones = new javax.swing.JMenuItem();
         jMenu6 = new javax.swing.JMenu();
-        jMenuItem5 = new javax.swing.JMenuItem();
-        jMenu3 = new javax.swing.JMenu();
-        jMenu7 = new javax.swing.JMenu();
-        jMenu4 = new javax.swing.JMenu();
-        jMenuItem6 = new javax.swing.JMenuItem();
+        menuPrep2 = new javax.swing.JMenuItem();
+        menuSalir = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(550, 600));
@@ -82,79 +81,79 @@ public class frmMenu extends javax.swing.JFrame {
 
         jMenu5.setText("Mi Cuenta");
 
-        jMenuItem2.setText("Cuentas de banco");
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+        menuCuentasBancarias.setText("Cuentas de banco");
+        menuCuentasBancarias.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
+                menuCuentasBancariasActionPerformed(evt);
             }
         });
-        jMenu5.add(jMenuItem2);
+        jMenu5.add(menuCuentasBancarias);
 
-        btnPresupuesto.setText("Mis Presupuestos");
-        btnPresupuesto.addActionListener(new java.awt.event.ActionListener() {
+        menuPresupuestos.setText("Mis Presupuestos");
+        menuPresupuestos.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPresupuestoActionPerformed(evt);
+                menuPresupuestosActionPerformed(evt);
             }
         });
-        jMenu5.add(btnPresupuesto);
+        jMenu5.add(menuPresupuestos);
 
-        btnNotas.setText("Notas");
-        btnNotas.addActionListener(new java.awt.event.ActionListener() {
+        menuNotas.setText("Notas");
+        menuNotas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnNotasActionPerformed(evt);
+                menuNotasActionPerformed(evt);
             }
         });
-        jMenu5.add(btnNotas);
+        jMenu5.add(menuNotas);
 
-        btnPerfil1.setText("Ajustes del perfil");
-        btnPerfil1.addActionListener(new java.awt.event.ActionListener() {
+        menuPerfil.setText("Ajustes del perfil");
+        menuPerfil.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPerfil1ActionPerformed(evt);
+                menuPerfilActionPerformed(evt);
             }
         });
-        jMenu5.add(btnPerfil1);
+        jMenu5.add(menuPerfil);
 
-        btnTransacciones.setText("Transacciones");
-        btnTransacciones.addActionListener(new java.awt.event.ActionListener() {
+        menuTransacciones.setText("Transacciones");
+        menuTransacciones.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnTransaccionesActionPerformed(evt);
+                menuTransaccionesActionPerformed(evt);
             }
         });
-        jMenu5.add(btnTransacciones);
+        jMenu5.add(menuTransacciones);
 
         jMenuBar1.add(jMenu5);
 
         jMenu6.setText("Ingresos y gastos");
 
-        jMenuItem5.setText("Presupuesto");
-        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+        menuPrep2.setText("Presupuesto");
+        menuPrep2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem5ActionPerformed(evt);
+                menuPrep2ActionPerformed(evt);
             }
         });
-        jMenu6.add(jMenuItem5);
+        jMenu6.add(menuPrep2);
 
         jMenuBar1.add(jMenu6);
 
-        jMenu3.setText("Ajustes");
-        jMenuBar1.add(jMenu3);
-
-        jMenu7.setText("Notificaciones");
-        jMenuBar1.add(jMenu7);
-
-        jMenu4.setText("Cerrar Sesión");
-
-        jMenuItem6.setText("Salir de la aplicación");
-        jMenu4.add(jMenuItem6);
-
-        jMenuBar1.add(jMenu4);
+        menuSalir.setText("Salir");
+        menuSalir.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                menuSalirMouseClicked(evt);
+            }
+        });
+        menuSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuSalirActionPerformed(evt);
+            }
+        });
+        jMenuBar1.add(menuSalir);
 
         setJMenuBar(jMenuBar1);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnTransaccionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTransaccionesActionPerformed
+    private void menuTransaccionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuTransaccionesActionPerformed
         try {
             Apagado();
         } catch (SQLException ex) {
@@ -176,9 +175,9 @@ public class frmMenu extends javax.swing.JFrame {
         Transaccion.setLocation((tCont.width - tiFrame.width) / 2, (tCont.height - tiFrame.height) / 2);
         content.revalidate();
         Transaccion.setVisible(true);
-    }//GEN-LAST:event_btnTransaccionesActionPerformed
+    }//GEN-LAST:event_menuTransaccionesActionPerformed
 
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+    private void menuCuentasBancariasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCuentasBancariasActionPerformed
         try {
             Apagado();
         } catch (SQLException ex) {
@@ -191,9 +190,9 @@ public class frmMenu extends javax.swing.JFrame {
         Banco.setLocation((tCont.width - tiFrame.width) / 2, (tCont.height - tiFrame.height) / 2);
         content.revalidate();
         Banco.setVisible(true);
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
+    }//GEN-LAST:event_menuCuentasBancariasActionPerformed
 
-    private void btnNotasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNotasActionPerformed
+    private void menuNotasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuNotasActionPerformed
         try {
             Apagado();
         } catch (SQLException ex) {
@@ -206,9 +205,9 @@ public class frmMenu extends javax.swing.JFrame {
         note.setLocation((tCont.width - tiFrame.width) / 2, (tCont.height - tiFrame.height) / 2);
         content.revalidate();
         note.setVisible(true);
-    }//GEN-LAST:event_btnNotasActionPerformed
+    }//GEN-LAST:event_menuNotasActionPerformed
 
-    private void btnPresupuestoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPresupuestoActionPerformed
+    private void menuPresupuestosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPresupuestosActionPerformed
         try {
             Apagado();
         } catch (SQLException ex) {
@@ -221,9 +220,9 @@ public class frmMenu extends javax.swing.JFrame {
         Presupuestos.setLocation((tCont.width - tiFrame.width) / 2, (tCont.height - tiFrame.height) / 2);
         content.revalidate();
         Presupuestos.setVisible(true);
-    }//GEN-LAST:event_btnPresupuestoActionPerformed
+    }//GEN-LAST:event_menuPresupuestosActionPerformed
 
-    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+    private void menuPrep2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPrep2ActionPerformed
         try {
             Apagado();
         } catch (SQLException ex) {
@@ -236,15 +235,15 @@ public class frmMenu extends javax.swing.JFrame {
         Presupuestos.setLocation((tCont.width - tiFrame.width) / 2, (tCont.height - tiFrame.height) / 2);
         content.revalidate();
         Presupuestos.setVisible(true);
-    }//GEN-LAST:event_jMenuItem5ActionPerformed
+    }//GEN-LAST:event_menuPrep2ActionPerformed
 
-    private void btnPerfil1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPerfil1ActionPerformed
-       try {
+    private void menuPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPerfilActionPerformed
+        try {
             Apagado();
         } catch (SQLException ex) {
             Logger.getLogger(frmMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         frmPerfil Info = new frmPerfil();
         content.add(Info);
         Dimension tCont = content.getSize();
@@ -252,7 +251,22 @@ public class frmMenu extends javax.swing.JFrame {
         Info.setLocation((tCont.width - tiFrame.width) / 2, (tCont.height - tiFrame.height) / 2);
         content.revalidate();
         Info.setVisible(true);
-    }//GEN-LAST:event_btnPerfil1ActionPerformed
+    }//GEN-LAST:event_menuPerfilActionPerformed
+
+    private void menuSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuSalirActionPerformed
+        
+    }//GEN-LAST:event_menuSalirActionPerformed
+
+    private void menuSalirMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuSalirMouseClicked
+        int confirm;
+        confirm = JOptionPane.showConfirmDialog(null,
+                "¿Estas seguro que deseas salir?", "Confirmar salir",
+                JOptionPane.YES_NO_OPTION);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            System.exit(0);
+        }
+    }//GEN-LAST:event_menuSalirMouseClicked
 
     /**
      * @param args the command line arguments
@@ -298,20 +312,17 @@ public class frmMenu extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenuItem btnNotas;
-    private javax.swing.JMenuItem btnPerfil1;
-    private javax.swing.JMenuItem btnPresupuesto;
-    private javax.swing.JMenuItem btnTransacciones;
     private javax.swing.JPanel content;
-    private javax.swing.JMenu jMenu3;
-    private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenu jMenu6;
-    private javax.swing.JMenu jMenu7;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem5;
-    private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JLabel lblWelcome;
+    private javax.swing.JMenuItem menuCuentasBancarias;
+    private javax.swing.JMenuItem menuNotas;
+    private javax.swing.JMenuItem menuPerfil;
+    private javax.swing.JMenuItem menuPrep2;
+    private javax.swing.JMenuItem menuPresupuestos;
+    private javax.swing.JMenu menuSalir;
+    private javax.swing.JMenuItem menuTransacciones;
     // End of variables declaration//GEN-END:variables
 }
