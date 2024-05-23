@@ -54,14 +54,13 @@ public class frmMenu extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu5 = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
-        btnTransacciones = new javax.swing.JMenuItem();
         btnPresupuesto = new javax.swing.JMenuItem();
         btnNotas = new javax.swing.JMenuItem();
+        btnPerfil1 = new javax.swing.JMenuItem();
+        btnTransacciones = new javax.swing.JMenuItem();
         jMenu6 = new javax.swing.JMenu();
         jMenuItem5 = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
-        jMenu11 = new javax.swing.JMenu();
-        btnPerfil = new javax.swing.JMenuItem();
         jMenu7 = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
         jMenuItem6 = new javax.swing.JMenuItem();
@@ -81,9 +80,9 @@ public class frmMenu extends javax.swing.JFrame {
         jMenuBar1.setMaximumSize(new java.awt.Dimension(650, 32768));
         jMenuBar1.setPreferredSize(new java.awt.Dimension(560, 23));
 
-        jMenu5.setText("Cuentas");
+        jMenu5.setText("Mi Cuenta");
 
-        jMenuItem2.setText("Bancarias");
+        jMenuItem2.setText("Cuentas de banco");
         jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem2ActionPerformed(evt);
@@ -91,15 +90,7 @@ public class frmMenu extends javax.swing.JFrame {
         });
         jMenu5.add(jMenuItem2);
 
-        btnTransacciones.setText("Transacciones");
-        btnTransacciones.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnTransaccionesActionPerformed(evt);
-            }
-        });
-        jMenu5.add(btnTransacciones);
-
-        btnPresupuesto.setText("Presupuestos");
+        btnPresupuesto.setText("Mis Presupuestos");
         btnPresupuesto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPresupuestoActionPerformed(evt);
@@ -114,6 +105,22 @@ public class frmMenu extends javax.swing.JFrame {
             }
         });
         jMenu5.add(btnNotas);
+
+        btnPerfil1.setText("Ajustes del perfil");
+        btnPerfil1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPerfil1ActionPerformed(evt);
+            }
+        });
+        jMenu5.add(btnPerfil1);
+
+        btnTransacciones.setText("Transacciones");
+        btnTransacciones.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTransaccionesActionPerformed(evt);
+            }
+        });
+        jMenu5.add(btnTransacciones);
 
         jMenuBar1.add(jMenu5);
 
@@ -131,18 +138,6 @@ public class frmMenu extends javax.swing.JFrame {
 
         jMenu3.setText("Ajustes");
         jMenuBar1.add(jMenu3);
-
-        jMenu11.setText("Perfil");
-
-        btnPerfil.setText("Ajustes del perfil");
-        btnPerfil.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPerfilActionPerformed(evt);
-            }
-        });
-        jMenu11.add(btnPerfil);
-
-        jMenuBar1.add(jMenu11);
 
         jMenu7.setText("Notificaciones");
         jMenuBar1.add(jMenu7);
@@ -182,22 +177,6 @@ public class frmMenu extends javax.swing.JFrame {
         content.revalidate();
         Transaccion.setVisible(true);
     }//GEN-LAST:event_btnTransaccionesActionPerformed
-
-    private void btnPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPerfilActionPerformed
-        try {
-            Apagado();
-        } catch (SQLException ex) {
-            Logger.getLogger(frmMenu.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        frmPerfil Info = new frmPerfil();
-        content.add(Info);
-        Dimension tCont = content.getSize();
-        Dimension tiFrame = Info.getSize();
-        Info.setLocation((tCont.width - tiFrame.width) / 2, (tCont.height - tiFrame.height) / 2);
-        content.revalidate();
-        Info.setVisible(true);
-    }//GEN-LAST:event_btnPerfilActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         try {
@@ -259,6 +238,22 @@ public class frmMenu extends javax.swing.JFrame {
         Presupuestos.setVisible(true);
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
+    private void btnPerfil1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPerfil1ActionPerformed
+       try {
+            Apagado();
+        } catch (SQLException ex) {
+            Logger.getLogger(frmMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        frmPerfil Info = new frmPerfil();
+        content.add(Info);
+        Dimension tCont = content.getSize();
+        Dimension tiFrame = Info.getSize();
+        Info.setLocation((tCont.width - tiFrame.width) / 2, (tCont.height - tiFrame.height) / 2);
+        content.revalidate();
+        Info.setVisible(true);
+    }//GEN-LAST:event_btnPerfil1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -304,11 +299,10 @@ public class frmMenu extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem btnNotas;
-    private javax.swing.JMenuItem btnPerfil;
+    private javax.swing.JMenuItem btnPerfil1;
     private javax.swing.JMenuItem btnPresupuesto;
     private javax.swing.JMenuItem btnTransacciones;
     private javax.swing.JPanel content;
-    private javax.swing.JMenu jMenu11;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
