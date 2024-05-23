@@ -5,6 +5,9 @@ import java.sql.Connection;
 import java.sql.CallableStatement;
 import java.sql.SQLException;
 import finanfx.models.Nota;
+import java.util.ArrayList;
+import java.util.List;
+import java.sql.ResultSet;
 
 
 public class Notas {
@@ -88,25 +91,30 @@ public class Notas {
         }
     }
     
-    public static void searchNota(Nota note) throws SQLException
-    {
+    public static Nota[] searchNotes(int ID_Transaccion)throws SQLException{
         Connection conn = null;
         CallableStatement stmt = null;
-
-        try
-        {
+        ResultSet rs = null;
+        ArrayList<Nota> noteList = new ArrayList<>();
+        try{
             conn = DatabaseConnection.getConnection();
-            String sql ="EXEC SP_ObtenerNotaTransaccion ?";
+            String sql = "EXEC SP_ListarNotasTransaccion ?";
             stmt = conn.prepareCall(sql);
+            stmt.setInt(1, ID_Transaccion);
+            rs = stmt.executeQuery();
             
-            stmt.setInt(1, note.getID_Nota());
-            
-            stmt.executeUpdate();
-            
-            re=stmt;
-        }
-        finally
-        {
+            while(rs.next()){
+                int idNota = rs.getInt("ID_Nota");
+                int idTransaction = rs.getInt("ID_Transaccion");
+                String noteText = rs.getString("Nota");
+                
+                Nota note = new Nota(idTransaction, idNota, noteText);
+                noteList.add(note);
+            }
+        }finally{
+            if(rs != null){
+                rs.close();
+            }
             if(stmt != null){
                 stmt.close();
             }
@@ -114,5 +122,6 @@ public class Notas {
                 conn.close();
             }
         }
+        return noteList.toArray(new Nota[noteList.size()]);
     }
 }
