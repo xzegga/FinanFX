@@ -17,8 +17,9 @@ import javax.swing.table.TableModel;
  * @author Ander
  */
 public class frmPresupuestos extends javax.swing.JPanel {
+
     Presupuestos budgetService = new Presupuestos();
-    
+
     /**
      * Creates new form frmPresupuestos
      */
@@ -45,13 +46,13 @@ public class frmPresupuestos extends javax.swing.JPanel {
                     budget.getCategoria(),
                     budget.getMonto_Presupuestado()
                 };
-                model.addRow(row); 
+                model.addRow(row);
             }
         } catch (SQLException ex) {
             Logger.getLogger(frmPresupuestos.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     private void updateBudget() {
         if (!validateFields()) {
             return;
@@ -90,8 +91,8 @@ public class frmPresupuestos extends javax.swing.JPanel {
             Logger.getLogger(frmPresupuestos.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-        // Método para eliminar un presupuesto por su ID desde la base de datos
+
+    // Método para eliminar un presupuesto por su ID desde la base de datos
     private void removeBudget() {
         String id = txtId.getText();
         int idBudget = (id != null && id.matches("\\d+")) ? Integer.parseInt(id) : 0;
@@ -119,7 +120,7 @@ public class frmPresupuestos extends javax.swing.JPanel {
             }
         }
     }
-    
+
     public final void addPeriodListener() {
         // Escuchar cambios en cboPeriodo y llenar cboStart en consecuencia
         cboPeriodo.addActionListener(e -> getPeriodStart(cboPeriodo, cboStart));
@@ -169,9 +170,9 @@ public class frmPresupuestos extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Ingresa un monto presupuestado", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        
+
         return true;
-    } 
+    }
 
     private String clearNonNumeric(String text) {
         // Get the character entered
@@ -183,18 +184,31 @@ public class frmPresupuestos extends javax.swing.JPanel {
         }
         return builder.toString();
     }
-    
+
     private void clearTextBox() {
         txtId.setText(null);
         txtMonto.setText(null);
         cboPeriodo.setSelectedIndex(0);
         cboCategories.setSelectedIndex(0);
         btnSaveoOrUpdate.setText("Guardar");
-        btnRemove.setEnabled(false);        
+        btnRemove.setEnabled(false);
         addPeriodListener();
     }
-        
-        
+
+    public void loadTableToForm() {
+        int index = jTable_Budgets.getSelectedRow();
+        TableModel model = jTable_Budgets.getModel();
+
+        txtId.setText(model.getValueAt(index, 0).toString());
+        cboPeriodo.setSelectedItem(model.getValueAt(index, 1).toString());
+        cboStart.setSelectedItem(model.getValueAt(index, 2).toString());
+        cboCategories.setSelectedItem(model.getValueAt(index, 3).toString());
+        txtMonto.setText(model.getValueAt(index, 4).toString());
+
+        btnSaveoOrUpdate.setText("Actualizar");
+        btnRemove.setEnabled(true);
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -430,18 +444,7 @@ public class frmPresupuestos extends javax.swing.JPanel {
     }//GEN-LAST:event_cboCategoriesActionPerformed
 
     private void jTable_BudgetsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable_BudgetsMouseClicked
-        int index = jTable_Budgets.getSelectedRow();
-        TableModel model = jTable_Budgets.getModel();
-
-        txtId.setText(model.getValueAt(index, 0).toString());
-        cboPeriodo.setSelectedItem(model.getValueAt(index, 1).toString());
-        cboStart.setSelectedItem(model.getValueAt(index, 2).toString());
-        cboCategories.setSelectedItem(model.getValueAt(index, 3).toString());
-        txtMonto.setText(model.getValueAt(index, 4).toString());
-
-        btnSaveoOrUpdate.setText("Actualizar");
-        btnRemove.setEnabled(true);
-        
+        loadTableToForm();
     }//GEN-LAST:event_jTable_BudgetsMouseClicked
 
     private void cboPeriodoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboPeriodoActionPerformed

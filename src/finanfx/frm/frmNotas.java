@@ -1,18 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package finanfx.frm;
 
 /*
- *
  * @author Ander
  */
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import javax.swing.JOptionPane;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -20,24 +10,127 @@ import java.sql.SQLException;
 import finanfx.data.DatabaseConnection;
 import finanfx.dao.Notas;
 import finanfx.models.Nota;
-import java.sql.ResultSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 public class frmNotas extends javax.swing.JPanel {
 
     /**
      * Creates new form frmNotas
      */
-    
     public frmNotas() {
         initComponents();
     }
-    
-    private void clearData()
-    {
+
+    private void clearData() {
         txtIDTransaccion.setText("");
         txtNota.setText("");
         txtIDNota.setText("");
+    }
+
+    public void saveNote() {
+        try {
+            int idTransaccion = Integer.parseInt(txtIDTransaccion.getText());
+            String GNotas = txtNota.getText();
+
+            Connection conn = DatabaseConnection.getConnection();
+
+            String sql = "{call SP_CrearNotaTransaccion(?, ?)}";
+            CallableStatement stmt = conn.prepareCall(sql);
+            stmt.setInt(1, idTransaccion);
+            stmt.setString(2, GNotas);
+
+            stmt.executeUpdate();
+
+            stmt.close();
+            conn.close();
+
+            JOptionPane.showMessageDialog(this, "Nota realizada exitosamente.");
+            clearData();
+        } catch (Exception x) {
+            JOptionPane.showMessageDialog(this, "Error al guardar la Nota: " + x.getMessage());
+        }
+    }
+
+    public void updateNote() {
+        try {
+            int idnota = Integer.parseInt(txtIDNota.getText());
+            String GNotas = txtNota.getText();
+
+            Connection conn = DatabaseConnection.getConnection();
+
+            String sql = "{call SP_ActualizarNotaTransaccion (?, ?)}";
+            CallableStatement stmt = conn.prepareCall(sql);
+            stmt.setInt(1, idnota);
+            stmt.setString(2, GNotas);
+
+            stmt.executeUpdate();
+
+            stmt.close();
+            conn.close();
+
+            JOptionPane.showMessageDialog(this, "Nota actualizada exitosamente.");
+            clearData();
+        } catch (Exception x) {
+            JOptionPane.showMessageDialog(this, "Error al editar la Nota: " + x.getMessage());
+        }
+    }
+
+    public void removeNote() {
+        try {
+            int idnota = Integer.parseInt(txtIDNota.getText());
+
+            Connection conn = DatabaseConnection.getConnection();
+
+            String sql = "{call SP_EliminarNotaTransaccion (?)}";
+            CallableStatement stmt = conn.prepareCall(sql);
+            stmt.setInt(1, idnota);
+
+            stmt.executeUpdate();
+
+            stmt.close();
+            conn.close();
+
+            JOptionPane.showMessageDialog(this, "Nota Eliminada exitosamente.");
+            clearData();
+
+        } catch (Exception x) {
+            JOptionPane.showMessageDialog(this, "Error Eliminando nota.");
+        }
+    }
+
+    public void searchNote() {
+        String searchTransactionsIDStr = txtIDTransaccion.getText();
+        if (searchTransactionsIDStr.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Por favor, ingrese un ID de transacción.");
+            return;
+        }
+        try {
+            int searchTransactionID = Integer.parseInt(searchTransactionsIDStr);
+
+            Nota[] notas = Notas.searchNotes(searchTransactionID);
+
+            if (notas.length > 0) {
+                Nota nota = notas[0];
+
+                txtIDNota.setText(String.valueOf(nota.getID_Nota()));
+                txtIDTransaccion.setText(String.valueOf(nota.getID_Transaccion()));
+                txtNota.setText(nota.getNota());
+
+                JOptionPane.showMessageDialog(this, "Nota encontrada.");
+            } else {
+                JOptionPane.showMessageDialog(this, "No se encontró ninguna nota con ese ID de transacción.");
+            }
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Por favor, ingrese un ID de transacción válido.");
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al buscar la nota: " + ex.getMessage());
+        }
+    }
+
+    public void cleanForm() {
+        txtIDNota.setText("");
+        txtIDTransaccion.setText("");
+        txtNota.setText("");
     }
 
     /**
@@ -188,119 +281,23 @@ public class frmNotas extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        // TODO add your handling code here:
-        try
-        {
-            int idTransaccion = Integer.parseInt(txtIDTransaccion.getText());
-            String GNotas = txtNota.getText();
-
-            Connection conn = DatabaseConnection.getConnection();
-
-            String sql = "{call SP_CrearNotaTransaccion(?, ?)}";
-            CallableStatement stmt = conn.prepareCall(sql);
-            stmt.setInt(1, idTransaccion);
-            stmt.setString(2,GNotas);
-
-            stmt.executeUpdate();
-
-            stmt.close();
-            conn.close();
-
-            JOptionPane.showMessageDialog(this, "Nota realizada exitosamente.");
-            clearData();
-        }catch(Exception x)
-        {
-            JOptionPane.showMessageDialog(this, "Error al guardar la Nota: " + x.getMessage());
-        }
+        saveNote();
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-    try
-    {
-        int idnota = Integer.parseInt(txtIDNota.getText());
-        String GNotas = txtNota.getText();
-        
-        Connection conn = DatabaseConnection.getConnection();
-        
-        String sql = "{call SP_ActualizarNotaTransaccion (?, ?)}";
-        CallableStatement stmt = conn.prepareCall(sql);
-        stmt.setInt(1, idnota);
-        stmt.setString(2, GNotas);
-        
-        stmt.executeUpdate();
-
-        stmt.close();
-        conn.close();
-
-        JOptionPane.showMessageDialog(this, "Nota actualizada exitosamente.");
-        clearData();
-    }
-    catch(Exception x)
-    {
-        JOptionPane.showMessageDialog(this, "Error al editar la Nota: " + x.getMessage());
-    }
+        updateNote();
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        // TODO add your handling code here:
-        try
-        {
-            int idnota = Integer.parseInt(txtIDNota.getText());
-            
-            Connection conn = DatabaseConnection.getConnection();
-            
-            String sql = "{call SP_EliminarNotaTransaccion (?)}";
-            CallableStatement stmt = conn.prepareCall(sql);
-            stmt.setInt(1, idnota);
-
-            stmt.executeUpdate();
-
-            stmt.close();
-            conn.close();
-
-            JOptionPane.showMessageDialog(this, "Nota Eliminada exitosamente.");
-            clearData();
-             
-        }catch(Exception x)
-        {
-            JOptionPane.showMessageDialog(this, "Error Eliminando nota.");
-        }
+        removeNote();
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        String searchTransactionsIDStr = txtIDTransaccion.getText();
-        if(searchTransactionsIDStr.isEmpty()){
-            JOptionPane.showMessageDialog(this, "Por favor, ingrese un ID de transacción.");
-            return;
-        }
-        try{
-            int searchTransactionID = Integer.parseInt(searchTransactionsIDStr);
-            
-            Nota[] notas = Notas.searchNotes(searchTransactionID);
-            
-            if(notas.length > 0){
-                Nota nota = notas[0];
-                
-                txtIDNota.setText(String.valueOf(nota.getID_Nota()));
-                txtIDTransaccion.setText(String.valueOf(nota.getID_Transaccion()));
-                txtNota.setText(nota.getNota());
-                
-                JOptionPane.showMessageDialog(this, "Nota encontrada.");
-            }else{
-                JOptionPane.showMessageDialog(this, "No se encontró ninguna nota con ese ID de transacción.");
-            }
-        }catch(NumberFormatException ex){
-            JOptionPane.showMessageDialog(this, "Por favor, ingrese un ID de transacción válido.");
-        }catch(SQLException ex){
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error al buscar la nota: " + ex.getMessage());
-        }
+        searchNote();
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void btnCleanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCleanActionPerformed
-        txtIDNota.setText("");
-        txtIDTransaccion.setText("");
-        txtNota.setText("");
+        cleanForm();
     }//GEN-LAST:event_btnCleanActionPerformed
 
 

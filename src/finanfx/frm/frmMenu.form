@@ -49,14 +49,6 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuPerfilActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="menuTransacciones">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Transacciones"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuTransaccionesActionPerformed"/>
-              </Events>
-            </MenuItem>
           </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="jMenu6">
@@ -64,12 +56,12 @@
             <Property name="text" type="java.lang.String" value="Ingresos y gastos"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="menuPrep2">
+            <MenuItem class="javax.swing.JMenuItem" name="menuTransacciones1">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Presupuesto"/>
+                <Property name="text" type="java.lang.String" value="Transacciones"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuPrep2ActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuTransacciones1ActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>

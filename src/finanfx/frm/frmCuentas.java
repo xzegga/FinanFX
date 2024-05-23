@@ -160,6 +160,19 @@ public class frmCuentas extends javax.swing.JPanel {
         btnSaveoOrUpdate.setText("Guardar");
         btnRemove.setEnabled(false);
     }
+    
+    public void loadTableToForm(){    
+        int index = jTable_Accounts.getSelectedRow();
+        TableModel model = jTable_Accounts.getModel();
+
+        txtId.setText(model.getValueAt(index, 0).toString());
+        txtTipo.setSelectedItem(model.getValueAt(index, 1).toString());
+        txtCuenta.setText(model.getValueAt(index, 2).toString());
+        cboBanco.setSelectedItem(model.getValueAt(index, 3).toString());
+        txtSaldo.setText(model.getValueAt(index, 4).toString());
+        btnSaveoOrUpdate.setText("Actualizar");
+        btnRemove.setEnabled(true);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -431,16 +444,7 @@ public class frmCuentas extends javax.swing.JPanel {
     }//GEN-LAST:event_txtTipoActionPerformed
 
     private void jTable_AccountsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable_AccountsMouseClicked
-        int index = jTable_Accounts.getSelectedRow();
-        TableModel model = jTable_Accounts.getModel();
-
-        txtId.setText(model.getValueAt(index, 0).toString());
-        txtTipo.setSelectedItem(model.getValueAt(index, 1).toString());
-        txtCuenta.setText(model.getValueAt(index, 2).toString());
-        cboBanco.setSelectedItem(model.getValueAt(index, 3).toString());
-        txtSaldo.setText(model.getValueAt(index, 4).toString());
-        btnSaveoOrUpdate.setText("Actualizar");
-        btnRemove.setEnabled(true);
+        loadTableToForm();
     }//GEN-LAST:event_jTable_AccountsMouseClicked
 
     private void btnSaveoOrUpdateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSaveoOrUpdateMouseClicked

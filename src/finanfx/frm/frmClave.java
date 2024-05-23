@@ -1,24 +1,42 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package finanfx.frm;
 
 /**
- *
  * @author Ander
  */
 import finanfx.dao.Usuarios;
+import java.awt.HeadlessException;
+import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
 public class frmClave extends javax.swing.JFrame {
 
-    /**
-     * Creates new form frmClave
-     */
     public frmClave() {
         initComponents();
         this.setLocationRelativeTo(null);//Para centrar el form
+    }
+
+    public void resetPassword() {
+        try {
+            Usuarios userService = new Usuarios();
+
+            userService.resetPassword(
+                    txtCorreo.getText(),
+                    new String(txtClave.getPassword()),
+                    new String(txtCambiarClave.getPassword()),
+                    new String(txtVClave.getPassword())
+            );
+
+            JOptionPane.showMessageDialog(this, "Clave cambiada exitosamente");
+
+        } catch (HeadlessException | SQLException x) {
+            JOptionPane.showMessageDialog(this, "Algo salio mal");
+        }
+    }
+
+    public void goBack() {
+        frmLogin login = new frmLogin();
+        login.setVisible(true);
+        this.hide();
     }
 
     /**
@@ -40,9 +58,10 @@ public class frmClave extends javax.swing.JFrame {
         btnRegresar = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         txtVClave = new javax.swing.JPasswordField();
+        jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMinimumSize(new java.awt.Dimension(450, 300));
+        setMinimumSize(new java.awt.Dimension(480, 350));
         setResizable(false);
         getContentPane().setLayout(null);
 
@@ -52,11 +71,12 @@ public class frmClave extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtCorreo);
-        txtCorreo.setBounds(150, 90, 200, 22);
+        txtCorreo.setBounds(180, 70, 200, 22);
 
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel1.setText("Correo electronico");
         getContentPane().add(jLabel1);
-        jLabel1.setBounds(30, 90, 120, 16);
+        jLabel1.setBounds(40, 70, 120, 16);
 
         txtClave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -64,17 +84,19 @@ public class frmClave extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtClave);
-        txtClave.setBounds(150, 130, 200, 22);
+        txtClave.setBounds(180, 110, 200, 22);
         getContentPane().add(txtCambiarClave);
-        txtCambiarClave.setBounds(150, 170, 200, 22);
+        txtCambiarClave.setBounds(180, 150, 200, 22);
 
-        jLabel2.setText("Nueva contraseña");
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel2.setText("Contraseña");
         getContentPane().add(jLabel2);
-        jLabel2.setBounds(30, 170, 120, 16);
+        jLabel2.setBounds(40, 110, 120, 16);
 
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel3.setText("Confirmar Contraseña");
         getContentPane().add(jLabel3);
-        jLabel3.setBounds(10, 210, 140, 22);
+        jLabel3.setBounds(20, 190, 140, 22);
 
         btnConfirmar.setText("Confirmar");
         btnConfirmar.addActionListener(new java.awt.event.ActionListener() {
@@ -83,7 +105,7 @@ public class frmClave extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnConfirmar);
-        btnConfirmar.setBounds(150, 250, 90, 23);
+        btnConfirmar.setBounds(180, 230, 90, 23);
 
         btnRegresar.setText("Regresar");
         btnRegresar.addActionListener(new java.awt.event.ActionListener() {
@@ -92,12 +114,12 @@ public class frmClave extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnRegresar);
-        btnRegresar.setBounds(260, 250, 90, 23);
+        btnRegresar.setBounds(290, 230, 90, 23);
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel4.setText("Recuperar Contraseña");
+        jLabel4.setText("Cambiar Contraseña");
         getContentPane().add(jLabel4);
-        jLabel4.setBounds(90, 40, 262, 33);
+        jLabel4.setBounds(20, 10, 262, 33);
 
         txtVClave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -105,7 +127,12 @@ public class frmClave extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtVClave);
-        txtVClave.setBounds(150, 210, 200, 22);
+        txtVClave.setBounds(180, 190, 200, 22);
+
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel5.setText("Nueva contraseña");
+        getContentPane().add(jLabel5);
+        jLabel5.setBounds(40, 150, 120, 16);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -119,26 +146,11 @@ public class frmClave extends javax.swing.JFrame {
     }//GEN-LAST:event_txtClaveActionPerformed
 
     private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
-        // TODO add your handling code here:
-        
-        try
-        {
-            Usuarios obj1 = new Usuarios();
-            
-            obj1.resetPassword(txtCorreo.getText(),txtClave.getText(),txtCambiarClave.getText(),txtVClave.getText());
-             JOptionPane.showMessageDialog(this, "Clave cambiada exitosamente");
-            
-        }catch(Exception x)
-        {
-            JOptionPane.showMessageDialog(this, "Algo salio mal");
-        }
+        resetPassword();
     }//GEN-LAST:event_btnConfirmarActionPerformed
 
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
-        // TODO add your handling code here:
-        frmLogin login = new frmLogin();
-        login.setVisible(true);
-        this.hide();
+        goBack();
     }//GEN-LAST:event_btnRegresarActionPerformed
 
     private void txtVClaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtVClaveActionPerformed
@@ -187,6 +199,7 @@ public class frmClave extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPasswordField txtCambiarClave;
     private javax.swing.JPasswordField txtClave;
     private javax.swing.JTextField txtCorreo;

@@ -1,7 +1,6 @@
 package finanfx.frm;
 
 /**
- *
  * @author Ander
  */
 import javax.swing.JOptionPane;
@@ -9,13 +8,41 @@ import finanfx.dao.Login;
 
 public class frmLogin extends javax.swing.JFrame {
 
+    Login loginService = new Login();
+
     public frmLogin() {
         initComponents();
-        //Centrar el form
         this.setLocationRelativeTo(null);
-
     }
     public static int Miembro = 0;
+
+    public void login() {
+        try {
+            if (loginService.validateUserLogin(txtUsuario.getText(), txtClave.getText()) > 0) {
+                Miembro = loginService.validateUserLogin(txtUsuario.getText(), txtClave.getText());
+                frmMenu menu = new frmMenu();
+                menu.setVisible(true);
+                this.hide();
+            } else {
+                JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos");
+            }
+
+        } catch (Exception x) {
+            JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos");
+        }
+    }
+
+    public void changePassword() {
+        this.hide();
+        frmClave contra = new frmClave();
+        contra.setVisible(true);
+    }
+
+    public void singup() {
+        this.hide();
+        frmRegistroUsuario singup = new frmRegistroUsuario();
+        singup.setVisible(true);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -34,7 +61,6 @@ public class frmLogin extends javax.swing.JFrame {
         lblCambiarClave = new javax.swing.JLabel();
         lblRegistrarCuenta = new javax.swing.JLabel();
         btnAcceder = new javax.swing.JButton();
-        btnSalir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(450, 300));
@@ -44,13 +70,14 @@ public class frmLogin extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel1.setText("Bienvenido");
         getContentPane().add(jLabel1);
-        jLabel1.setBounds(160, 10, 170, 32);
+        jLabel1.setBounds(150, 20, 130, 32);
         getContentPane().add(txtUsuario);
-        txtUsuario.setBounds(130, 60, 198, 22);
+        txtUsuario.setBounds(140, 80, 198, 25);
 
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel2.setText("Usuario");
         getContentPane().add(jLabel2);
-        jLabel2.setBounds(50, 66, 50, 16);
+        jLabel2.setBounds(80, 80, 50, 25);
 
         txtClave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -58,20 +85,22 @@ public class frmLogin extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtClave);
-        txtClave.setBounds(130, 100, 198, 22);
+        txtClave.setBounds(140, 120, 198, 25);
 
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel3.setText("Contraseña");
         getContentPane().add(jLabel3);
-        jLabel3.setBounds(39, 106, 70, 16);
+        jLabel3.setBounds(60, 120, 70, 25);
 
-        lblCambiarClave.setText("Recuperar contraseña");
+        lblCambiarClave.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblCambiarClave.setText("Cambiar contraseña");
         lblCambiarClave.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblCambiarClaveMouseClicked(evt);
             }
         });
         getContentPane().add(lblCambiarClave);
-        lblCambiarClave.setBounds(175, 178, 140, 16);
+        lblCambiarClave.setBounds(50, 210, 150, 30);
 
         lblRegistrarCuenta.setText("¿No tienes una cuenta?");
         lblRegistrarCuenta.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -80,7 +109,7 @@ public class frmLogin extends javax.swing.JFrame {
             }
         });
         getContentPane().add(lblRegistrarCuenta);
-        lblRegistrarCuenta.setBounds(167, 200, 140, 30);
+        lblRegistrarCuenta.setBounds(220, 210, 140, 30);
 
         btnAcceder.setText("Acceder");
         btnAcceder.addActionListener(new java.awt.event.ActionListener() {
@@ -89,16 +118,7 @@ public class frmLogin extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnAcceder);
-        btnAcceder.setBounds(130, 143, 95, 23);
-
-        btnSalir.setText("Salir");
-        btnSalir.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSalirActionPerformed(evt);
-            }
-        });
-        getContentPane().add(btnSalir);
-        btnSalir.setBounds(231, 143, 97, 23);
+        btnAcceder.setBounds(240, 160, 95, 30);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -108,36 +128,15 @@ public class frmLogin extends javax.swing.JFrame {
     }//GEN-LAST:event_txtClaveActionPerformed
 
     private void btnAccederActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAccederActionPerformed
-        try {
-            Login obj1 = new Login();
-            if (obj1.validateUserLogin(txtUsuario.getText(), txtClave.getText()) > 0) {
-                Miembro = obj1.validateUserLogin(txtUsuario.getText(), txtClave.getText());
-                frmMenu menu = new frmMenu();
-                menu.setVisible(true);
-                this.hide();
-            } else {
-                JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos");
-            }
-
-        } catch (Exception x) {
-            JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos");
-        }
+        login();
     }//GEN-LAST:event_btnAccederActionPerformed
 
-    private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
-        this.dispose();
-    }//GEN-LAST:event_btnSalirActionPerformed
-
     private void lblCambiarClaveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCambiarClaveMouseClicked
-        frmClave contra = new frmClave();
-        contra.setVisible(true);
-        this.hide();
+        changePassword();
     }//GEN-LAST:event_lblCambiarClaveMouseClicked
 
     private void lblRegistrarCuentaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblRegistrarCuentaMouseClicked
-        frmRegistroUsuario ruser = new frmRegistroUsuario();
-        ruser.setVisible(true);
-        this.hide();
+        singup();
     }//GEN-LAST:event_lblRegistrarCuentaMouseClicked
 
     /**
@@ -177,7 +176,6 @@ public class frmLogin extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAcceder;
-    private javax.swing.JButton btnSalir;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

@@ -1,5 +1,5 @@
 package finanfx.models;
-import java.sql.Date;
+import java.util.Date;
 import java.sql.Timestamp;
 
 public class User {
@@ -90,7 +90,7 @@ public class User {
     public User() {
     }
 
-    public User(String nombre, String apellido, Date fechaNacimiento, String email, String password, String telefono, String estado, Timestamp fechaRegistro) {
+    public User(String nombre, String apellido, Date fechaNacimiento, String email, String password, String telefono, String estado) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.fechaNacimiento = fechaNacimiento;
@@ -98,7 +98,6 @@ public class User {
         this.password = password;
         this.telefono = telefono;
         this.estado = estado;
-        this.fechaRegistro = fechaRegistro;
     }
     
     public User(int Id, String nombre, String apellido, Date fechaNacimiento, String email, String telefono, String estado) {

@@ -6,11 +6,11 @@ import finanfx.data.DatabaseConnection;
 import java.sql.Connection;
 import java.sql.CallableStatement;
 import java.sql.SQLException;
-import finanfx.models.Transacciones;
+import finanfx.models.Transaccion;
 import java.util.ArrayList;
 
-public class Transaccion {
-    public static void saveTransaction(Transacciones transactions)throws SQLException{
+public class Transacciones {
+    public static void saveTransaction(Transaccion transactions)throws SQLException{
         Connection conn =  null;
         CallableStatement stmt = null;
         
@@ -39,7 +39,7 @@ public class Transaccion {
         }
     }
     
-    public static void updateTransaction(Transacciones transaction) throws SQLException {
+    public static void updateTransaction(Transaccion transaction) throws SQLException {
         Connection conn = null;
         CallableStatement stmt = null;
 
@@ -70,11 +70,11 @@ public class Transaccion {
         }
     }
     
-    public static Transacciones[] listTransactions(int ID_Transaccion) throws SQLException {
+    public static Transaccion[] listTransactions(int ID_Transaccion) throws SQLException {
         Connection conn = null;
         CallableStatement stmt = null;
         ResultSet rs = null;
-        ArrayList<Transacciones> transactionList = new ArrayList<>();
+        ArrayList<Transaccion> transactionList = new ArrayList<>();
 
         try
         {
@@ -95,7 +95,7 @@ public class Transaccion {
                 String description = rs.getString("Descripcion");
                 String paymentMethod = rs.getString("Forma_Pago");
 
-                Transacciones transaction = new Transacciones(idTransaction,idUsuario, transactionType, amount, fecha, categories, description, paymentMethod);
+                Transaccion transaction = new Transaccion(idTransaction,idUsuario, transactionType, amount, fecha, categories, description, paymentMethod);
                 transactionList.add(transaction);
             }
         } finally
@@ -114,7 +114,7 @@ public class Transaccion {
             }
         }
 
-        return transactionList.toArray(new Transacciones[transactionList.size()]);
+        return transactionList.toArray(new Transaccion[transactionList.size()]);
     }
     
     public static void deleteTransactions(int ID_Transaccion) throws SQLException{

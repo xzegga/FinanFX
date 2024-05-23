@@ -1,29 +1,22 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package finanfx.frm;
 
 /**
  *
  * @author Ander
  */
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.JOptionPane;
-import java.sql.CallableStatement;
-import java.sql.Connection;
 import java.sql.SQLException;
-import finanfx.data.DatabaseConnection;
 import finanfx.dao.Usuarios;
-import finanfx.data.DatabaseConfig;
-import java.sql.ResultSet;
+import finanfx.models.User;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 public class frmRegistroUsuario extends javax.swing.JFrame {
+
+    Usuarios userService = new Usuarios();
 
     /**
      * Creates new form frmRegistroUsuario
@@ -31,6 +24,42 @@ public class frmRegistroUsuario extends javax.swing.JFrame {
     public frmRegistroUsuario() {
         initComponents();
         this.setLocationRelativeTo(null);//Para centrar el form
+    }
+
+    public void createUser() {
+        try {
+            String fechaText = txtNacimiento.getText();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date fechaNacimientoUtil = dateFormat.parse(fechaText);
+            Date date = new Date(fechaNacimientoUtil.getTime());
+
+            User user = new User(
+                    txtNombres.getText(),
+                    txtApellidos.getText(),
+                    date,
+                    txtCorreo.getText(),
+                    new String(txtClave.getPassword()),
+                    txtTelefono.getText(),
+                    "a"
+            );
+            try {
+                userService.createUser(user);
+                JOptionPane.showMessageDialog(this, "Perfil actualizado con éxito");
+                this.hide();
+                frmLogin singin = new frmLogin();
+                singin.setVisible(true);
+            } catch (SQLException ex) {
+                Logger.getLogger(frmRegistroUsuario.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } catch (ParseException ex) {
+            Logger.getLogger(frmRegistroUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void backToLogin() {
+        frmLogin login = new frmLogin();
+        login.setVisible(true);
+        this.hide();
     }
 
     /**
@@ -76,14 +105,14 @@ public class frmRegistroUsuario extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setAutoRequestFocus(false);
         setBackground(new java.awt.Color(153, 255, 204));
-        setMinimumSize(new java.awt.Dimension(550, 470));
+        setMinimumSize(new java.awt.Dimension(480, 470));
         setResizable(false);
         getContentPane().setLayout(null);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel1.setText("Registro");
         getContentPane().add(jLabel1);
-        jLabel1.setBounds(140, 40, 87, 32);
+        jLabel1.setBounds(10, 10, 87, 32);
 
         txtNombres.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -91,17 +120,19 @@ public class frmRegistroUsuario extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtNombres);
-        txtNombres.setBounds(145, 82, 230, 22);
+        txtNombres.setBounds(140, 70, 230, 22);
 
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel2.setText("Nombres");
         getContentPane().add(jLabel2);
-        jLabel2.setBounds(67, 85, 60, 16);
+        jLabel2.setBounds(60, 70, 60, 16);
 
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel3.setText("Apellidos");
         getContentPane().add(jLabel3);
-        jLabel3.setBounds(67, 125, 60, 16);
+        jLabel3.setBounds(60, 110, 60, 16);
         getContentPane().add(txtApellidos);
-        txtApellidos.setBounds(145, 122, 230, 22);
+        txtApellidos.setBounds(140, 110, 230, 22);
 
         txtCorreo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -109,15 +140,17 @@ public class frmRegistroUsuario extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtCorreo);
-        txtCorreo.setBounds(145, 162, 230, 22);
+        txtCorreo.setBounds(140, 150, 230, 22);
 
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel4.setText("Email");
         getContentPane().add(jLabel4);
-        jLabel4.setBounds(77, 165, 50, 16);
+        jLabel4.setBounds(70, 150, 50, 16);
 
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel5.setText("Telefono");
         getContentPane().add(jLabel5);
-        jLabel5.setBounds(60, 210, 60, 16);
+        jLabel5.setBounds(60, 190, 60, 16);
 
         txtTelefono.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -125,11 +158,12 @@ public class frmRegistroUsuario extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtTelefono);
-        txtTelefono.setBounds(145, 202, 230, 22);
+        txtTelefono.setBounds(140, 190, 230, 22);
 
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel6.setText("Contraseña");
         getContentPane().add(jLabel6);
-        jLabel6.setBounds(48, 250, 80, 16);
+        jLabel6.setBounds(40, 230, 80, 16);
 
         txtClave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -137,7 +171,7 @@ public class frmRegistroUsuario extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtClave);
-        txtClave.setBounds(145, 247, 230, 22);
+        txtClave.setBounds(140, 230, 230, 22);
 
         btnConfirmar.setText("Confirmar");
         btnConfirmar.addActionListener(new java.awt.event.ActionListener() {
@@ -146,7 +180,7 @@ public class frmRegistroUsuario extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnConfirmar);
-        btnConfirmar.setBounds(150, 320, 100, 23);
+        btnConfirmar.setBounds(160, 320, 100, 23);
 
         btnRegresar.setText("Regresar");
         btnRegresar.addActionListener(new java.awt.event.ActionListener() {
@@ -155,11 +189,12 @@ public class frmRegistroUsuario extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnRegresar);
-        btnRegresar.setBounds(283, 320, 90, 23);
+        btnRegresar.setBounds(280, 320, 90, 23);
 
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel7.setText("Nacimiento");
         getContentPane().add(jLabel7);
-        jLabel7.setBounds(53, 290, 80, 16);
+        jLabel7.setBounds(40, 270, 80, 16);
 
         txtNacimiento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -167,7 +202,7 @@ public class frmRegistroUsuario extends javax.swing.JFrame {
             }
         });
         getContentPane().add(txtNacimiento);
-        txtNacimiento.setBounds(145, 287, 230, 22);
+        txtNacimiento.setBounds(140, 270, 230, 22);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -189,45 +224,7 @@ public class frmRegistroUsuario extends javax.swing.JFrame {
     }//GEN-LAST:event_txtClaveActionPerformed
 
     private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
-        // TODO add your handling code here:
-        try
-        {
-            String nombres = txtNombres.getText();
-            String apellidos = txtApellidos.getText();
-            String FechaN = txtNacimiento.getText();
-            String email = txtCorreo.getText();
-            String contrasena = txtClave.getText();
-            String telefono = txtTelefono.getText();
-            String estado = "a";
-            
-           SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
-           java.util.Date parsedDate = dateFormat.parse(FechaN);
-           java.sql.Date sqlDate = new java.sql.Date(parsedDate.getTime());
-            
-            Connection conn = DatabaseConnection.getConnection();
-            String sql = "{call SP_CrearUsuario (?, ?, ?, ?, ?, ?, ?, ?)}";
-            CallableStatement stmt = conn.prepareCall(sql);
-            
-            stmt.setString(1, nombres);
-            stmt.setString(2, apellidos);
-            stmt.setDate(3, sqlDate);
-            stmt.setString(4, email);
-            stmt.setString(5, contrasena);
-            stmt.setString(6, telefono);
-            stmt.setString(7, estado);
-            stmt.setString(8, DatabaseConfig.DB_PATTERN);
-           
-            stmt.executeUpdate();
-            
-            stmt.close();
-            conn.close();
-            
-            JOptionPane.showMessageDialog(this, "Registro perfecto ");
-            
-        }catch(Exception x)
-        {
-            JOptionPane.showMessageDialog(this, "Error al registrar usuario: " + x.getMessage());
-        }
+        createUser();
     }//GEN-LAST:event_btnConfirmarActionPerformed
 
     private void txtNacimientoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNacimientoActionPerformed
@@ -235,10 +232,7 @@ public class frmRegistroUsuario extends javax.swing.JFrame {
     }//GEN-LAST:event_txtNacimientoActionPerformed
 
     private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
-        // TODO add your handling code here:
-        frmLogin login = new frmLogin();
-        login.setVisible(true);
-        this.hide();
+        backToLogin();
     }//GEN-LAST:event_btnRegresarActionPerformed
 
     /**

@@ -1,27 +1,71 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package finanfx.frm;
 
-import finanfx.data.DatabaseConfig;
-import finanfx.data.DatabaseConnection;
-import java.sql.CallableStatement;
-import java.sql.Connection;
+import finanfx.dao.Usuarios;
+import finanfx.models.User;
+import finanfx.state.LoggedInUser;
+import java.sql.SQLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author Ander
- */
 public class frmPerfil extends javax.swing.JPanel {
+
+    Usuarios userService = new Usuarios();
 
     /**
      * Creates new form frmUsuarios
      */
     public frmPerfil() {
         initComponents();
+        loadUser();
+    }
+
+    public final void loadUser() {
+        User user = LoggedInUser.getInstance().getUser();
+        txtId.setText(String.valueOf(user.getID()));
+        txtNombre.setText(user.getNombre());
+        txtApellido.setText(user.getApellido());
+        txtTelefono.setText(user.getTelefono());
+        txtEmail.setText(user.getEmail());
+
+        Date fechaNacimientoSql = user.getFechaNacimiento();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String fechaText = dateFormat.format(fechaNacimientoSql);
+        txtFechaNacimiento.setText(fechaText);
+    }
+
+    public void updateProfile() {
+        try {
+            User loggedUser = LoggedInUser.getInstance().getUser();
+
+            String fechaText = txtFechaNacimiento.getText();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date fechaNacimientoUtil = dateFormat.parse(fechaText);
+
+            Date date = new Date(fechaNacimientoUtil.getTime());
+
+            User user = new User(
+                    Integer.parseInt(txtId.getText()),
+                    txtNombre.getText(),
+                    txtApellido.getText(),
+                    date,
+                    txtEmail.getText(),
+                    txtTelefono.getText(),
+                    loggedUser.getEstado()
+            );
+
+            try {
+                userService.updateUsuarios(user);
+                JOptionPane.showMessageDialog(this, "Perfil actualizado con éxito");
+            } catch (SQLException ex) {
+                Logger.getLogger(frmPerfil.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } catch (ParseException ex) {
+            Logger.getLogger(frmPerfil.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -33,51 +77,43 @@ public class frmPerfil extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        txtapellidos = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
+        txtApellido = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        txtnombres = new javax.swing.JTextField();
+        txtNombre = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         txtEmail = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        btnEditar = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        txttelefono = new javax.swing.JTextField();
-        txtFechaN = new javax.swing.JTextField();
+        txtTelefono = new javax.swing.JTextField();
+        txtFechaNacimiento = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         txtId = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        cbEstado = new javax.swing.JComboBox<>();
 
         setBackground(new java.awt.Color(255, 255, 204));
         setPreferredSize(new java.awt.Dimension(540, 450));
 
-        txtapellidos.addActionListener(new java.awt.event.ActionListener() {
+        txtApellido.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtapellidosActionPerformed(evt);
-            }
-        });
-
-        jButton2.setText("Eliminar perfil");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                txtApellidoActionPerformed(evt);
             }
         });
 
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel5.setText("Telefono");
 
-        txtnombres.addActionListener(new java.awt.event.ActionListener() {
+        txtNombre.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtnombresActionPerformed(evt);
+                txtNombreActionPerformed(evt);
             }
         });
 
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel7.setText("Nacimiento");
 
+        txtEmail.setEditable(false);
         txtEmail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtEmailActionPerformed(evt);
@@ -87,10 +123,10 @@ public class frmPerfil extends javax.swing.JPanel {
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel3.setText("Apellidos");
 
-        jButton1.setText("Editar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnEditar.setText("Editar");
+        btnEditar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnEditarActionPerformed(evt);
             }
         });
 
@@ -100,15 +136,15 @@ public class frmPerfil extends javax.swing.JPanel {
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel2.setText("Nombres");
 
-        txttelefono.addActionListener(new java.awt.event.ActionListener() {
+        txtTelefono.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txttelefonoActionPerformed(evt);
+                txtTelefonoActionPerformed(evt);
             }
         });
 
-        txtFechaN.addActionListener(new java.awt.event.ActionListener() {
+        txtFechaNacimiento.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtFechaNActionPerformed(evt);
+                txtFechaNacimientoActionPerformed(evt);
             }
         });
 
@@ -116,6 +152,7 @@ public class frmPerfil extends javax.swing.JPanel {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel1.setText("Perfil");
 
+        txtId.setEnabled(false);
         txtId.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtIdActionPerformed(evt);
@@ -125,8 +162,6 @@ public class frmPerfil extends javax.swing.JPanel {
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel6.setText("ID");
 
-        cbEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Activo", "Inactivo" }));
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -134,34 +169,29 @@ public class frmPerfil extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(107, 107, 107)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton2))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(11, 11, 11)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(85, 85, 85)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addGap(25, 25, 25)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(95, 95, 95)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(cbEstado, 0, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(txtnombres, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtapellidos, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txttelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtFechaN, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(132, Short.MAX_VALUE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING))
+                                .addGap(25, 25, 25)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtApellido, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtFechaNacimiento, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                .addContainerGap(155, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -170,20 +200,19 @@ public class frmPerfil extends javax.swing.JPanel {
                 .addGap(14, 14, 14)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(14, 14, 14)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtnombres, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(14, 14, 14)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtapellidos, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtApellido, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(14, 14, 14)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txttelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(14, 14, 14)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -191,97 +220,44 @@ public class frmPerfil extends javax.swing.JPanel {
                 .addGap(14, 14, 14)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtFechaN, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(25, 25, 25)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)))
+                    .addComponent(txtFechaNacimiento, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(btnEditar)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtapellidosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtapellidosActionPerformed
+    private void txtApellidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtApellidoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtapellidosActionPerformed
+    }//GEN-LAST:event_txtApellidoActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void txtNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void txtnombresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtnombresActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtnombresActionPerformed
+    }//GEN-LAST:event_txtNombreActionPerformed
 
     private void txtEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmailActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtEmailActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        try
-        {
-            int IdUser = Integer.parseInt(txtId.getText());
-            String nombre = txtnombres.getText();
-            String apellido = txtapellidos.getText();
-            String FechaN = txtFechaN.getText();
-            String telefono = txttelefono.getText();
-            String Estado = cbEstado.getSelectedItem().toString();
-            
-            if(Estado == "Activo")
-            {
-                Estado = "a";
-            }else
-            {
-                Estado = "i";
-            }
-            
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd");
-           java.util.Date parsedDate = dateFormat.parse(FechaN);
-           java.sql.Date sqlDate = new java.sql.Date(parsedDate.getTime());
-            
-           Connection conn = DatabaseConnection.getConnection();
-            String sql = "{call SP_ActualizarUsuario (?, ?, ?, ?, ?, ?, ?)}";
-            CallableStatement stmt = conn.prepareCall(sql);
-            
-            stmt.setInt(1, IdUser);
-            stmt.setString(2, nombre);
-            stmt.setString(3, apellido);
-            stmt.setDate(4, sqlDate);
-            stmt.setString(5, telefono);
-            stmt.setString(6, Estado);
-            stmt.setString(7, DatabaseConfig.DB_PATTERN);
-           
-            stmt.executeUpdate();
-            
-            stmt.close();
-            conn.close();
-            
-            JOptionPane.showMessageDialog(this, "Cambios guardados correctamente ");
-            
-        }
-        catch(Exception x)
-        {
-            JOptionPane.showMessageDialog(this, "Algo salio mal "+x);
-        }
-        
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
+        updateProfile();
+    }//GEN-LAST:event_btnEditarActionPerformed
 
-    private void txttelefonoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txttelefonoActionPerformed
+    private void txtTelefonoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTelefonoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txttelefonoActionPerformed
+    }//GEN-LAST:event_txtTelefonoActionPerformed
 
     private void txtIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIdActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtIdActionPerformed
 
-    private void txtFechaNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFechaNActionPerformed
+    private void txtFechaNacimientoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFechaNacimientoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtFechaNActionPerformed
+    }//GEN-LAST:event_txtFechaNacimientoActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox<String> cbEstado;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton btnEditar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -289,11 +265,11 @@ public class frmPerfil extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JTextField txtApellido;
     private javax.swing.JTextField txtEmail;
-    private javax.swing.JTextField txtFechaN;
+    private javax.swing.JTextField txtFechaNacimiento;
     private javax.swing.JTextField txtId;
-    private javax.swing.JTextField txtapellidos;
-    private javax.swing.JTextField txtnombres;
-    private javax.swing.JTextField txttelefono;
+    private javax.swing.JTextField txtNombre;
+    private javax.swing.JTextField txtTelefono;
     // End of variables declaration//GEN-END:variables
 }

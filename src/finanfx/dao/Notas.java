@@ -6,7 +6,6 @@ import java.sql.CallableStatement;
 import java.sql.SQLException;
 import finanfx.models.Nota;
 import java.util.ArrayList;
-import java.util.List;
 import java.sql.ResultSet;
 
 

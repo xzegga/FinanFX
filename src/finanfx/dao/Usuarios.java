@@ -1,7 +1,7 @@
 package finanfx.dao;
 
 /**
- * @author Ander
+ * @author Anderson ^Raúl Escamilla
  */
 import finanfx.data.DatabaseConfig;
 import finanfx.data.DatabaseConnection;
@@ -9,79 +9,129 @@ import java.sql.Connection;
 import java.sql.CallableStatement;
 import java.sql.SQLException;
 import finanfx.models.User;
+import java.sql.ResultSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Usuarios {
 
-    public static CallableStatement re;
+    private Connection connection = null;
+    private CallableStatement statement = null;
+    private ResultSet resultSet = null;
 
-    public static void saveUsuarios(User users) throws SQLException {
-        Connection conn = null;
-        CallableStatement stmt = null;
-
+    public void createUser(User user) throws SQLException {
         try {
-            conn = DatabaseConnection.getConnection();
-            String sql = "EXEC SP_CrearUsuario ?, ?, ?, ?, ?, ?, ?, ?";
-            stmt = conn.prepareCall(sql);
+            connection = DatabaseConnection.getConnection();
+            statement = connection.prepareCall("{CALL SP_CrearUsuario(?, ?, ?, ?, ?, ?, ?, ?)}");
+            
+            java.sql.Date fechaNac = new java.sql.Date(user.getFechaNacimiento().getTime());
+            
+            statement.setString(1, user.getNombre());
+            statement.setString(2, user.getApellido());
+            statement.setDate(3, fechaNac);
+            statement.setString(4, user.getEmail());
+            statement.setString(5, user.getPassword());
+            statement.setString(6, user.getTelefono());
+            statement.setString(7,"a");
+            statement.setString(8, DatabaseConfig.DB_PATTERN);
 
-            stmt.setString(1, users.getNombre());
-            stmt.setString(2, users.getApellido());
-            stmt.setDate(3, users.getFechaNacimiento());
-            stmt.setString(4, users.getEmail());
-            stmt.setString(5, users.getPassword());
-            stmt.setString(6, users.getTelefono());
-            stmt.setString(7, users.getEstado());
-            stmt.setString(8, DatabaseConfig.DB_PATTERN);
+            statement.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger("saveUsuarios").log(Level.SEVERE, null, ex);
         } finally {
-            if (stmt != null) {
-                stmt.close();
-            }
-            if (conn != null) {
-                conn.close();
-            }
+            closeResources();
         }
     }
 
-    public static void resetPassword(String email, String Contra, String NContra, String VContra) throws SQLException {
-        try (
-                Connection connection = DatabaseConnection.getConnection(); CallableStatement statement = connection.prepareCall("{call SP_ResetearContrasena(?,?,?,?,?)}")) {
+    public void resetPassword(String email, String oldPassword, String newPassword, String confirmNewPassword) throws SQLException {
+        try {
+            connection = DatabaseConnection.getConnection();
+            statement = connection.prepareCall("{CALL SP_ResetearContrasena(?, ?, ?, ?, ?)}");
 
             statement.setString(1, email);
-            statement.setString(2, Contra);
-            statement.setString(3, NContra);
-            statement.setString(4, VContra);
+            statement.setString(2, oldPassword);
+            statement.setString(3, newPassword);
+            statement.setString(4, confirmNewPassword);
             statement.setString(5, DatabaseConfig.DB_PATTERN);
 
             statement.execute();
-
-        } catch (SQLException e) {
-            throw new SQLException("Error al autenticar el usuario", e);
+        } catch (SQLException ex) {
+            Logger.getLogger("saveUsuarios").log(Level.SEVERE, null, ex);
+        } finally {
+            closeResources();
         }
-
     }
 
-    public static void updateUsuarios(User users) throws SQLException {
-        Connection conn = null;
-        CallableStatement stmt = null;
+    public void updateUsuarios(User user) throws SQLException {
         try {
-            conn = DatabaseConnection.getConnection();
-            String sql = "EXEC SP_ActualizarUsuario ?, ?, ?, ?, ?, ?, ?";
-            stmt = conn.prepareCall(sql);
+            connection = DatabaseConnection.getConnection();
+            statement = connection.prepareCall("{CALL SP_ActualizarUsuario(?, ?, ?, ?, ?, ?, ?)}");
+            
+            java.sql.Date fechaNac = new java.sql.Date(user.getFechaNacimiento().getTime());
+            
+            statement.setInt(1, user.getID());
+            statement.setString(2, user.getNombre());
+            statement.setString(3, user.getApellido());
+            statement.setDate(4, fechaNac);
+            statement.setString(5, user.getTelefono());
+            statement.setString(6, user.getEstado());
+            statement.setString(7, DatabaseConfig.DB_PATTERN);
 
-            stmt.setInt(1, users.getID());
-            stmt.setString(2, users.getNombre());
-            stmt.setString(2, users.getApellido());
-            stmt.setDate(3, users.getFechaNacimiento());
-            stmt.setString(4, users.getEmail());
-            stmt.setString(5, users.getTelefono());
-            stmt.setString(6, users.getEstado());
-            stmt.setString(7, DatabaseConfig.DB_PATTERN);
+            statement.execute();
+        } catch (SQLException ex) {
+            Logger.getLogger("saveUsuarios").log(Level.SEVERE, null, ex);
         } finally {
-            if (stmt != null) {
-                stmt.close();
+            closeResources();
+        }
+    }
+
+    // Método para obtener un presupuesto por su ID desde la base de datos
+    public User getUserById(int userId) throws SQLException {
+        User user = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            statement = connection.prepareCall("{call SP_LeerUsuario(?, ?)}");
+
+            statement.setInt(1, userId);
+            statement.setString(2, DatabaseConfig.DB_PATTERN);
+
+            resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                user = new User(
+                        resultSet.getInt("ID_Usuario"),
+                        resultSet.getString("Nombre"),
+                        resultSet.getString("Apellido"),
+                        resultSet.getDate("Fecha_Nacimiento"),
+                        resultSet.getString("Email"),
+                        resultSet.getString("Telefono"),
+                        resultSet.getString("Estado")
+                );
             }
-            if (conn != null) {
-                conn.close();
+            return user;
+        } catch (SQLException ex) {
+            Logger.getLogger("saveUsuarios").log(Level.SEVERE, null, ex);
+        } finally {
+            closeResources();
+        }
+
+        return user;
+    }
+
+    private void closeResources() {
+        try {
+            if (resultSet != null) {
+                resultSet.close();
             }
+            if (statement != null) {
+                statement.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
+
+            DatabaseConnection.closeConnection(connection);
+        } catch (SQLException e) {
         }
     }
 }

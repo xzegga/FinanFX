@@ -10,7 +10,7 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author Ander
+ * @author Ander & Raúl Escamilla
  */
 public class frmMenu extends javax.swing.JFrame {
 
@@ -42,6 +42,102 @@ public class frmMenu extends javax.swing.JFrame {
         frmLogin Logueo = new frmLogin();
     }
 
+    public void loadAccountsForm() {
+        try {
+            Apagado();
+        } catch (SQLException ex) {
+            Logger.getLogger(frmMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        frmCuentas Banco = new frmCuentas();
+        content.add(Banco);
+        Dimension tCont = content.getSize();
+        Dimension tiFrame = Banco.getSize();
+        Banco.setLocation((tCont.width - tiFrame.width) / 2, (tCont.height - tiFrame.height) / 2);
+        content.revalidate();
+        Banco.setVisible(true);
+    }
+
+    public void loadNotesForm() {
+        try {
+            Apagado();
+        } catch (SQLException ex) {
+            Logger.getLogger(frmMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        frmNotas note = new frmNotas();
+        content.add(note);
+        Dimension tCont = content.getSize();
+        Dimension tiFrame = note.getSize();
+        note.setLocation((tCont.width - tiFrame.width) / 2, (tCont.height - tiFrame.height) / 2);
+        content.revalidate();
+        note.setVisible(true);
+    }
+
+    public void loadBudgetForm() {
+        try {
+            Apagado();
+        } catch (SQLException ex) {
+            Logger.getLogger(frmMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        frmPresupuestos Presupuestos = new frmPresupuestos();
+        content.add(Presupuestos);
+        Dimension tCont = content.getSize();
+        Dimension tiFrame = Presupuestos.getSize();
+        Presupuestos.setLocation((tCont.width - tiFrame.width) / 2, (tCont.height - tiFrame.height) / 2);
+        content.revalidate();
+        Presupuestos.setVisible(true);
+    }
+
+    public void loadProfile() {
+        try {
+            Apagado();
+        } catch (SQLException ex) {
+            Logger.getLogger(frmMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        frmPerfil Info = new frmPerfil();
+        content.add(Info);
+        Dimension tCont = content.getSize();
+        Dimension tiFrame = Info.getSize();
+        Info.setLocation((tCont.width - tiFrame.width) / 2, (tCont.height - tiFrame.height) / 2);
+        content.revalidate();
+        Info.setVisible(true);
+    }
+
+    public void exitApp() {
+        int confirm;
+        confirm = JOptionPane.showConfirmDialog(null,
+                "¿Estas seguro que deseas salir?", "Confirmar salir",
+                JOptionPane.YES_NO_OPTION);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            System.exit(0);
+        }
+    }
+
+    public void loadTransactionsForm() {
+        try {
+            Apagado();
+        } catch (SQLException ex) {
+            Logger.getLogger(frmMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        frmTransacciones Transaccion = null;
+
+        try {
+            Transaccion = new frmTransacciones();
+        } catch (SQLException ex) {
+            Logger.getLogger(frmMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        content.add(Transaccion);
+        Dimension tCont = content.getSize();
+        Dimension tiFrame = Transaccion.getSize();
+
+        Transaccion.setLocation((tCont.width - tiFrame.width) / 2, (tCont.height - tiFrame.height) / 2);
+        content.revalidate();
+        Transaccion.setVisible(true);
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -59,9 +155,8 @@ public class frmMenu extends javax.swing.JFrame {
         menuPresupuestos = new javax.swing.JMenuItem();
         menuNotas = new javax.swing.JMenuItem();
         menuPerfil = new javax.swing.JMenuItem();
-        menuTransacciones = new javax.swing.JMenuItem();
         jMenu6 = new javax.swing.JMenu();
-        menuPrep2 = new javax.swing.JMenuItem();
+        menuTransacciones1 = new javax.swing.JMenuItem();
         menuSalir = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -113,25 +208,17 @@ public class frmMenu extends javax.swing.JFrame {
         });
         jMenu5.add(menuPerfil);
 
-        menuTransacciones.setText("Transacciones");
-        menuTransacciones.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuTransaccionesActionPerformed(evt);
-            }
-        });
-        jMenu5.add(menuTransacciones);
-
         jMenuBar1.add(jMenu5);
 
         jMenu6.setText("Ingresos y gastos");
 
-        menuPrep2.setText("Presupuesto");
-        menuPrep2.addActionListener(new java.awt.event.ActionListener() {
+        menuTransacciones1.setText("Transacciones");
+        menuTransacciones1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuPrep2ActionPerformed(evt);
+                menuTransacciones1ActionPerformed(evt);
             }
         });
-        jMenu6.add(menuPrep2);
+        jMenu6.add(menuTransacciones1);
 
         jMenuBar1.add(jMenu6);
 
@@ -153,120 +240,33 @@ public class frmMenu extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void menuTransaccionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuTransaccionesActionPerformed
-        try {
-            Apagado();
-        } catch (SQLException ex) {
-            Logger.getLogger(frmMenu.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        frmTransacciones Transaccion = null;
-
-        try {
-            Transaccion = new frmTransacciones();
-        } catch (SQLException ex) {
-            Logger.getLogger(frmMenu.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        content.add(Transaccion);
-        Dimension tCont = content.getSize();
-        Dimension tiFrame = Transaccion.getSize();
-
-        Transaccion.setLocation((tCont.width - tiFrame.width) / 2, (tCont.height - tiFrame.height) / 2);
-        content.revalidate();
-        Transaccion.setVisible(true);
-    }//GEN-LAST:event_menuTransaccionesActionPerformed
-
     private void menuCuentasBancariasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCuentasBancariasActionPerformed
-        try {
-            Apagado();
-        } catch (SQLException ex) {
-            Logger.getLogger(frmMenu.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        frmCuentas Banco = new frmCuentas();
-        content.add(Banco);
-        Dimension tCont = content.getSize();
-        Dimension tiFrame = Banco.getSize();
-        Banco.setLocation((tCont.width - tiFrame.width) / 2, (tCont.height - tiFrame.height) / 2);
-        content.revalidate();
-        Banco.setVisible(true);
+        loadAccountsForm();
     }//GEN-LAST:event_menuCuentasBancariasActionPerformed
 
     private void menuNotasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuNotasActionPerformed
-        try {
-            Apagado();
-        } catch (SQLException ex) {
-            Logger.getLogger(frmMenu.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        frmNotas note = new frmNotas();
-        content.add(note);
-        Dimension tCont = content.getSize();
-        Dimension tiFrame = note.getSize();
-        note.setLocation((tCont.width - tiFrame.width) / 2, (tCont.height - tiFrame.height) / 2);
-        content.revalidate();
-        note.setVisible(true);
+        loadNotesForm();
     }//GEN-LAST:event_menuNotasActionPerformed
 
     private void menuPresupuestosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPresupuestosActionPerformed
-        try {
-            Apagado();
-        } catch (SQLException ex) {
-            Logger.getLogger(frmMenu.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        frmPresupuestos Presupuestos = new frmPresupuestos();
-        content.add(Presupuestos);
-        Dimension tCont = content.getSize();
-        Dimension tiFrame = Presupuestos.getSize();
-        Presupuestos.setLocation((tCont.width - tiFrame.width) / 2, (tCont.height - tiFrame.height) / 2);
-        content.revalidate();
-        Presupuestos.setVisible(true);
+        loadBudgetForm();
     }//GEN-LAST:event_menuPresupuestosActionPerformed
 
-    private void menuPrep2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPrep2ActionPerformed
-        try {
-            Apagado();
-        } catch (SQLException ex) {
-            Logger.getLogger(frmMenu.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        frmPresupuestos Presupuestos = new frmPresupuestos();
-        content.add(Presupuestos);
-        Dimension tCont = content.getSize();
-        Dimension tiFrame = Presupuestos.getSize();
-        Presupuestos.setLocation((tCont.width - tiFrame.width) / 2, (tCont.height - tiFrame.height) / 2);
-        content.revalidate();
-        Presupuestos.setVisible(true);
-    }//GEN-LAST:event_menuPrep2ActionPerformed
-
     private void menuPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPerfilActionPerformed
-        try {
-            Apagado();
-        } catch (SQLException ex) {
-            Logger.getLogger(frmMenu.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        frmPerfil Info = new frmPerfil();
-        content.add(Info);
-        Dimension tCont = content.getSize();
-        Dimension tiFrame = Info.getSize();
-        Info.setLocation((tCont.width - tiFrame.width) / 2, (tCont.height - tiFrame.height) / 2);
-        content.revalidate();
-        Info.setVisible(true);
+        loadProfile();
     }//GEN-LAST:event_menuPerfilActionPerformed
 
     private void menuSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuSalirActionPerformed
-        
+
     }//GEN-LAST:event_menuSalirActionPerformed
 
     private void menuSalirMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuSalirMouseClicked
-        int confirm;
-        confirm = JOptionPane.showConfirmDialog(null,
-                "¿Estas seguro que deseas salir?", "Confirmar salir",
-                JOptionPane.YES_NO_OPTION);
-
-        if (confirm == JOptionPane.YES_OPTION) {
-            System.exit(0);
-        }
+        exitApp();
     }//GEN-LAST:event_menuSalirMouseClicked
+
+    private void menuTransacciones1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuTransacciones1ActionPerformed
+        loadTransactionsForm();
+    }//GEN-LAST:event_menuTransacciones1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -320,9 +320,8 @@ public class frmMenu extends javax.swing.JFrame {
     private javax.swing.JMenuItem menuCuentasBancarias;
     private javax.swing.JMenuItem menuNotas;
     private javax.swing.JMenuItem menuPerfil;
-    private javax.swing.JMenuItem menuPrep2;
     private javax.swing.JMenuItem menuPresupuestos;
     private javax.swing.JMenu menuSalir;
-    private javax.swing.JMenuItem menuTransacciones;
+    private javax.swing.JMenuItem menuTransacciones1;
     // End of variables declaration//GEN-END:variables
 }
