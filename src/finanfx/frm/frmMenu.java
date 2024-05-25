@@ -34,10 +34,8 @@ public class frmMenu extends javax.swing.JFrame {
         perfil.setVisible(false);
         frmPresupuestos presupuesto = new frmPresupuestos();
         presupuesto.setVisible(false);
-        frmTransacciones Transacciones = new frmTransacciones();
+        frmTransacciones Transacciones = new frmTransacciones(this);
         Transacciones.setVisible(false);
-        frmNotas note = new frmNotas();
-        note.setVisible(false);
         content.removeAll();
         frmLogin Logueo = new frmLogin();
     }
@@ -57,13 +55,13 @@ public class frmMenu extends javax.swing.JFrame {
         Banco.setVisible(true);
     }
 
-    public void loadNotesForm() {
+    public void loadNotesForm(int id) {
         try {
             Apagado();
         } catch (SQLException ex) {
             Logger.getLogger(frmMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
-        frmNotas note = new frmNotas();
+        frmNotas note = new frmNotas(id);
         content.add(note);
         Dimension tCont = content.getSize();
         Dimension tiFrame = note.getSize();
@@ -124,7 +122,7 @@ public class frmMenu extends javax.swing.JFrame {
         frmTransacciones Transaccion = null;
 
         try {
-            Transaccion = new frmTransacciones();
+            Transaccion = new frmTransacciones(this);
         } catch (SQLException ex) {
             Logger.getLogger(frmMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -153,23 +151,25 @@ public class frmMenu extends javax.swing.JFrame {
         jMenu5 = new javax.swing.JMenu();
         menuCuentasBancarias = new javax.swing.JMenuItem();
         menuPresupuestos = new javax.swing.JMenuItem();
-        menuNotas = new javax.swing.JMenuItem();
         menuPerfil = new javax.swing.JMenuItem();
         jMenu6 = new javax.swing.JMenu();
         menuTransacciones1 = new javax.swing.JMenuItem();
         menuSalir = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMinimumSize(new java.awt.Dimension(550, 600));
+        setMinimumSize(new java.awt.Dimension(580, 700));
         getContentPane().setLayout(null);
 
+        lblWelcome.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblWelcome.setText("Bienvenido (Nombre de usuario)");
         getContentPane().add(lblWelcome);
-        lblWelcome.setBounds(20, 510, 250, 16);
+        lblWelcome.setBounds(220, 20, 320, 16);
 
         content.setBackground(new java.awt.Color(255, 255, 204));
+        content.setAutoscrolls(true);
+        content.setPreferredSize(new java.awt.Dimension(600, 700));
         getContentPane().add(content);
-        content.setBounds(0, 0, 560, 570);
+        content.setBounds(0, 0, 600, 700);
 
         jMenuBar1.setMaximumSize(new java.awt.Dimension(650, 32768));
         jMenuBar1.setPreferredSize(new java.awt.Dimension(560, 23));
@@ -191,14 +191,6 @@ public class frmMenu extends javax.swing.JFrame {
             }
         });
         jMenu5.add(menuPresupuestos);
-
-        menuNotas.setText("Notas");
-        menuNotas.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuNotasActionPerformed(evt);
-            }
-        });
-        jMenu5.add(menuNotas);
 
         menuPerfil.setText("Ajustes del perfil");
         menuPerfil.addActionListener(new java.awt.event.ActionListener() {
@@ -240,22 +232,6 @@ public class frmMenu extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void menuCuentasBancariasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCuentasBancariasActionPerformed
-        loadAccountsForm();
-    }//GEN-LAST:event_menuCuentasBancariasActionPerformed
-
-    private void menuNotasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuNotasActionPerformed
-        loadNotesForm();
-    }//GEN-LAST:event_menuNotasActionPerformed
-
-    private void menuPresupuestosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPresupuestosActionPerformed
-        loadBudgetForm();
-    }//GEN-LAST:event_menuPresupuestosActionPerformed
-
-    private void menuPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPerfilActionPerformed
-        loadProfile();
-    }//GEN-LAST:event_menuPerfilActionPerformed
-
     private void menuSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuSalirActionPerformed
 
     }//GEN-LAST:event_menuSalirActionPerformed
@@ -267,6 +243,18 @@ public class frmMenu extends javax.swing.JFrame {
     private void menuTransacciones1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuTransacciones1ActionPerformed
         loadTransactionsForm();
     }//GEN-LAST:event_menuTransacciones1ActionPerformed
+
+    private void menuPerfilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPerfilActionPerformed
+        loadProfile();
+    }//GEN-LAST:event_menuPerfilActionPerformed
+
+    private void menuPresupuestosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPresupuestosActionPerformed
+        loadBudgetForm();
+    }//GEN-LAST:event_menuPresupuestosActionPerformed
+
+    private void menuCuentasBancariasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCuentasBancariasActionPerformed
+        loadAccountsForm();
+    }//GEN-LAST:event_menuCuentasBancariasActionPerformed
 
     /**
      * @param args the command line arguments
@@ -318,7 +306,6 @@ public class frmMenu extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JLabel lblWelcome;
     private javax.swing.JMenuItem menuCuentasBancarias;
-    private javax.swing.JMenuItem menuNotas;
     private javax.swing.JMenuItem menuPerfil;
     private javax.swing.JMenuItem menuPresupuestos;
     private javax.swing.JMenu menuSalir;

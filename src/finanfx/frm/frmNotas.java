@@ -3,74 +3,95 @@ package finanfx.frm;
 /*
  * @author Ander
  */
-import javax.swing.JOptionPane;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.SQLException;
-import finanfx.data.DatabaseConnection;
 import finanfx.dao.Notas;
+import javax.swing.JOptionPane;
 import finanfx.models.Nota;
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class frmNotas extends javax.swing.JPanel {
 
+    private final int transactionId;
+
     /**
      * Creates new form frmNotas
+     *
+     * @param transactionId
      */
-    public frmNotas() {
+    public frmNotas(int transactionId) {
+        this.transactionId = transactionId;
         initComponents();
+        clearData();
+        loadData();
+    }
+
+    public final void loadData() {
+        try {
+            ArrayList<Nota> notes = Notas.searchNotes(transactionId);
+
+            DefaultTableModel model = (DefaultTableModel) jTable_Notes.getModel();
+            model.setRowCount(0);
+
+            for (Nota note : notes) {
+                Object[] row = {
+                    note.getID_Nota(),
+                    note.getNota(),};
+                model.addRow(row);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(frmPresupuestos.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private void clearData() {
-        txtIDTransaccion.setText("");
         txtNota.setText("");
         txtIDNota.setText("");
+        btnDelete.setEnabled(false);
+        btnSaveoOrUpdate.setText("Guardar");
+    }
+
+    public void loadTableToForm() {
+        int index = jTable_Notes.getSelectedRow();
+        TableModel model = jTable_Notes.getModel();
+
+        txtIDNota.setText(model.getValueAt(index, 0).toString());
+        txtNota.setText(model.getValueAt(index, 1).toString());
+
+        btnSaveoOrUpdate.setText("Actualizar");
+        btnDelete.setEnabled(true);
     }
 
     public void saveNote() {
         try {
-            int idTransaccion = Integer.parseInt(txtIDTransaccion.getText());
             String GNotas = txtNota.getText();
+            if (GNotas.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Debe incluir un texto en la nota");
+                return;
+            }
+            Nota note = new Nota(
+                    transactionId,
+                    GNotas
+            );
+            String idNote = txtIDNota.getText();
 
-            Connection conn = DatabaseConnection.getConnection();
+            if (idNote.isEmpty()) {
+                Notas.saveNotas(note);
+                JOptionPane.showMessageDialog(this, "Nota guardada exitosamente.");
+            } else {
+                note.setID_Nota(Integer.parseInt(idNote));
+                Notas.updateNota(note);
+                JOptionPane.showMessageDialog(this, "Nota actualizada exitosamente.");
+            }
+            loadData();
 
-            String sql = "{call SP_CrearNotaTransaccion(?, ?)}";
-            CallableStatement stmt = conn.prepareCall(sql);
-            stmt.setInt(1, idTransaccion);
-            stmt.setString(2, GNotas);
-
-            stmt.executeUpdate();
-
-            stmt.close();
-            conn.close();
-
-            JOptionPane.showMessageDialog(this, "Nota realizada exitosamente.");
             clearData();
         } catch (Exception x) {
             JOptionPane.showMessageDialog(this, "Error al guardar la Nota: " + x.getMessage());
-        }
-    }
-
-    public void updateNote() {
-        try {
-            int idnota = Integer.parseInt(txtIDNota.getText());
-            String GNotas = txtNota.getText();
-
-            Connection conn = DatabaseConnection.getConnection();
-
-            String sql = "{call SP_ActualizarNotaTransaccion (?, ?)}";
-            CallableStatement stmt = conn.prepareCall(sql);
-            stmt.setInt(1, idnota);
-            stmt.setString(2, GNotas);
-
-            stmt.executeUpdate();
-
-            stmt.close();
-            conn.close();
-
-            JOptionPane.showMessageDialog(this, "Nota actualizada exitosamente.");
-            clearData();
-        } catch (Exception x) {
-            JOptionPane.showMessageDialog(this, "Error al editar la Nota: " + x.getMessage());
         }
     }
 
@@ -78,60 +99,16 @@ public class frmNotas extends javax.swing.JPanel {
         try {
             int idnota = Integer.parseInt(txtIDNota.getText());
 
-            Connection conn = DatabaseConnection.getConnection();
-
-            String sql = "{call SP_EliminarNotaTransaccion (?)}";
-            CallableStatement stmt = conn.prepareCall(sql);
-            stmt.setInt(1, idnota);
-
-            stmt.executeUpdate();
-
-            stmt.close();
-            conn.close();
-
+            Notas.deleteNota(idnota);
             JOptionPane.showMessageDialog(this, "Nota Eliminada exitosamente.");
             clearData();
+            loadData();
 
         } catch (Exception x) {
             JOptionPane.showMessageDialog(this, "Error Eliminando nota.");
         }
     }
 
-    public void searchNote() {
-        String searchTransactionsIDStr = txtIDTransaccion.getText();
-        if (searchTransactionsIDStr.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Por favor, ingrese un ID de transacción.");
-            return;
-        }
-        try {
-            int searchTransactionID = Integer.parseInt(searchTransactionsIDStr);
-
-            Nota[] notas = Notas.searchNotes(searchTransactionID);
-
-            if (notas.length > 0) {
-                Nota nota = notas[0];
-
-                txtIDNota.setText(String.valueOf(nota.getID_Nota()));
-                txtIDTransaccion.setText(String.valueOf(nota.getID_Transaccion()));
-                txtNota.setText(nota.getNota());
-
-                JOptionPane.showMessageDialog(this, "Nota encontrada.");
-            } else {
-                JOptionPane.showMessageDialog(this, "No se encontró ninguna nota con ese ID de transacción.");
-            }
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Por favor, ingrese un ID de transacción válido.");
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error al buscar la nota: " + ex.getMessage());
-        }
-    }
-
-    public void cleanForm() {
-        txtIDNota.setText("");
-        txtIDTransaccion.setText("");
-        txtNota.setText("");
-    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -143,22 +120,20 @@ public class frmNotas extends javax.swing.JPanel {
     private void initComponents() {
 
         txtIDNota = new javax.swing.JTextField();
-        txtIDTransaccion = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        btnGuardar = new javax.swing.JButton();
-        btnEditar = new javax.swing.JButton();
-        btnEliminar = new javax.swing.JButton();
-        btnBuscar = new javax.swing.JButton();
+        btnSaveoOrUpdate = new javax.swing.JButton();
+        btnDelete = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtNota = new javax.swing.JTextArea();
         btnClean = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable_Notes = new javax.swing.JTable();
 
         setBackground(new java.awt.Color(255, 255, 204));
 
-        txtIDTransaccion.setAutoscrolls(false);
+        txtIDNota.setEditable(false);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel1.setText("Notas");
@@ -170,34 +145,17 @@ public class frmNotas extends javax.swing.JPanel {
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel3.setText("ID nota");
 
-        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel4.setText("ID Transaccion");
-
-        btnGuardar.setText("Guardar");
-        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+        btnSaveoOrUpdate.setText("Guardar");
+        btnSaveoOrUpdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGuardarActionPerformed(evt);
+                btnSaveoOrUpdateActionPerformed(evt);
             }
         });
 
-        btnEditar.setText("Editar");
-        btnEditar.addActionListener(new java.awt.event.ActionListener() {
+        btnDelete.setText("Eliminar");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEditarActionPerformed(evt);
-            }
-        });
-
-        btnEliminar.setText("Eliminar");
-        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEliminarActionPerformed(evt);
-            }
-        });
-
-        btnBuscar.setText("Buscar");
-        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBuscarActionPerformed(evt);
+                btnDeleteActionPerformed(evt);
             }
         });
 
@@ -214,6 +172,42 @@ public class frmNotas extends javax.swing.JPanel {
             }
         });
 
+        jTable_Notes.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Nota"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTable_Notes.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable_NotesMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(jTable_Notes);
+        if (jTable_Notes.getColumnModel().getColumnCount() > 0) {
+            jTable_Notes.getColumnModel().getColumn(0).setMinWidth(30);
+            jTable_Notes.getColumnModel().getColumn(0).setPreferredWidth(30);
+            jTable_Notes.getColumnModel().getColumn(0).setMaxWidth(30);
+            jTable_Notes.getColumnModel().getColumn(1).setResizable(false);
+        }
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -223,29 +217,28 @@ public class frmNotas extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(11, 11, 11)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(65, 65, 65)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addGap(25, 25, 25)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(txtIDTransaccion, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)
-                            .addComponent(txtIDNota))
-                        .addGap(18, 18, 18)
-                        .addComponent(btnBuscar))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(102, 102, 102)
-                        .addComponent(btnGuardar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnEditar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnEliminar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnClean)))
-                .addContainerGap(85, Short.MAX_VALUE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(btnSaveoOrUpdate)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(btnDelete)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(btnClean))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                            .addGap(104, 104, 104)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addGap(25, 25, 25)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtIDNota, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 54, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 409, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(82, 82, 82))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -253,67 +246,55 @@ public class frmNotas extends javax.swing.JPanel {
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(14, 14, 14)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtIDNota, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(14, 14, 14)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(14, 14, 14)
+                        .addGap(2, 2, 2)
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtIDNota, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnBuscar))
-                        .addGap(12, 12, 12)
-                        .addComponent(txtIDTransaccion, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(14, 14, 14)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(25, 25, 25)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(29, 29, 29)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnEliminar)
-                    .addComponent(btnEditar)
-                    .addComponent(btnGuardar)
+                    .addComponent(btnDelete)
+                    .addComponent(btnSaveoOrUpdate)
                     .addComponent(btnClean))
-                .addContainerGap(118, Short.MAX_VALUE))
+                .addGap(35, 35, 35)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(99, Short.MAX_VALUE))
         );
 
         txtIDNota.getAccessibleContext().setAccessibleName("");
-        txtIDTransaccion.getAccessibleContext().setAccessibleName("");
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+    private void btnSaveoOrUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveoOrUpdateActionPerformed
         saveNote();
-    }//GEN-LAST:event_btnGuardarActionPerformed
+    }//GEN-LAST:event_btnSaveoOrUpdateActionPerformed
 
-    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
-        updateNote();
-    }//GEN-LAST:event_btnEditarActionPerformed
-
-    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         removeNote();
-    }//GEN-LAST:event_btnEliminarActionPerformed
-
-    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        searchNote();
-    }//GEN-LAST:event_btnBuscarActionPerformed
+    }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void btnCleanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCleanActionPerformed
-        cleanForm();
+        clearData();
     }//GEN-LAST:event_btnCleanActionPerformed
+
+    private void jTable_NotesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable_NotesMouseClicked
+        loadTableToForm();
+    }//GEN-LAST:event_jTable_NotesMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnClean;
-    private javax.swing.JButton btnEditar;
-    private javax.swing.JButton btnEliminar;
-    private javax.swing.JButton btnGuardar;
+    private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnSaveoOrUpdate;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jTable_Notes;
     private javax.swing.JTextField txtIDNota;
-    private javax.swing.JTextField txtIDTransaccion;
     private javax.swing.JTextArea txtNota;
     // End of variables declaration//GEN-END:variables
 }

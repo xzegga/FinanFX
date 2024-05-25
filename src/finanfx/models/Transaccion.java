@@ -5,7 +5,6 @@ import java.sql.Date;
 public class Transaccion {
     private int ID_Transaccion;
     private int ID_Usuario;
-    private String Tipo_Transaccion;
     private double Cantidad;
     private Date Fecha;
     private String Categoria;
@@ -27,14 +26,6 @@ public class Transaccion {
 
     public void setID_Usuario(int ID_Usuario) {
         this.ID_Usuario = ID_Usuario;
-    }
-
-    public String getTipo_Transaccion() {
-        return Tipo_Transaccion;
-    }
-
-    public void setTipo_Transaccion(String Tipo_Transaccion) {
-        this.Tipo_Transaccion = Tipo_Transaccion;
     }
 
     public double getCantidad() {
@@ -77,10 +68,9 @@ public class Transaccion {
         this.Forma_Pago = Forma_Pago;
     }
 
-    public Transaccion(int ID_Transaccion, int ID_Usuario, String Tipo_Transaccion, double Cantidad, Date Fecha, String Categoria, String Descripcion, String Forma_Pago) {
+    public Transaccion(int ID_Transaccion, int ID_Usuario, double Cantidad, Date Fecha, String Categoria, String Descripcion, String Forma_Pago) {
         this.ID_Transaccion = ID_Transaccion;
         this.ID_Usuario = ID_Usuario;
-        this.Tipo_Transaccion = Tipo_Transaccion;
         this.Cantidad = Cantidad;
         this.Fecha = Fecha;
         this.Categoria = Categoria;
@@ -88,9 +78,8 @@ public class Transaccion {
         this.Forma_Pago = Forma_Pago;
     }
 
-    public Transaccion(int ID_Usuario, String Tipo_Transaccion, double Cantidad, Date Fecha, String Categoria, String Descripcion, String Forma_Pago) {
+    public Transaccion(int ID_Usuario, double Cantidad, Date Fecha, String Categoria, String Descripcion, String Forma_Pago) {
         this.ID_Usuario = ID_Usuario;
-        this.Tipo_Transaccion = Tipo_Transaccion;
         this.Cantidad = Cantidad;
         this.Fecha = Fecha;
         this.Categoria = Categoria;

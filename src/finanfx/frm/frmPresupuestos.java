@@ -305,7 +305,7 @@ public class frmPresupuestos extends javax.swing.JPanel {
                 java.lang.Integer.class, java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, true, false, false
+                false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -323,10 +323,13 @@ public class frmPresupuestos extends javax.swing.JPanel {
         });
         jScrollPane2.setViewportView(jTable_Budgets);
         if (jTable_Budgets.getColumnModel().getColumnCount() > 0) {
+            jTable_Budgets.getColumnModel().getColumn(0).setResizable(false);
+            jTable_Budgets.getColumnModel().getColumn(0).setPreferredWidth(20);
             jTable_Budgets.getColumnModel().getColumn(1).setResizable(false);
             jTable_Budgets.getColumnModel().getColumn(2).setResizable(false);
             jTable_Budgets.getColumnModel().getColumn(3).setResizable(false);
             jTable_Budgets.getColumnModel().getColumn(4).setResizable(false);
+            jTable_Budgets.getColumnModel().getColumn(4).setPreferredWidth(30);
         }
 
         cboPeriodo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--- Seleccione una opción ---", "Semanal", "Quincenal", "Mensual", " " }));
@@ -356,9 +359,6 @@ public class frmPresupuestos extends javax.swing.JPanel {
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(60, 60, 60)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 443, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(60, 60, 60)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -378,8 +378,11 @@ public class frmPresupuestos extends javax.swing.JPanel {
                         .addGap(18, 18, 18)
                         .addComponent(btnCancel)
                         .addGap(18, 18, 18)
-                        .addComponent(btnRemove)))
-                .addGap(68, 68, 68))
+                        .addComponent(btnRemove))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(27, 27, 27)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 483, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(61, Short.MAX_VALUE))
         );
 
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {cboCategories, txtMonto});
@@ -413,9 +416,9 @@ public class frmPresupuestos extends javax.swing.JPanel {
                     .addComponent(btnSaveoOrUpdate)
                     .addComponent(btnCancel)
                     .addComponent(btnRemove))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                .addGap(34, 34, 34)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(45, 45, 45))
+                .addContainerGap(61, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

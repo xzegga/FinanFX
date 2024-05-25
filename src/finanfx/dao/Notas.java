@@ -12,7 +12,7 @@ import java.sql.ResultSet;
 public class Notas {
     public static CallableStatement re;
     
-    public static void saveNotas (Nota note) throws SQLException
+    public static void saveNotas(Nota note) throws SQLException
     {
         Connection conn = null;
         CallableStatement stmt = null;
@@ -25,6 +25,7 @@ public class Notas {
             
             stmt.setInt(1, note.getID_Transaccion());
             stmt.setString(2, note.getNota());
+            stmt.execute();
         }
         finally
         {
@@ -48,10 +49,10 @@ public class Notas {
             String sql ="EXEC SP_ActualizarNotaTransaccion ?, ?";
             stmt = conn.prepareCall(sql);
             
-            stmt.setInt(1, note.getID_Transaccion());
+            stmt.setInt(1, note.getID_Nota());
             stmt.setString(2, note.getNota());
             
-            stmt.executeUpdate();
+            stmt.execute();
         }
         finally
         {
@@ -64,7 +65,7 @@ public class Notas {
         }
     }
     
-    public static void deleteNota(Nota note) throws SQLException
+    public static void deleteNota(int id) throws SQLException
     {
         Connection conn = null;
         CallableStatement stmt = null;
@@ -75,9 +76,9 @@ public class Notas {
             String sql ="EXEC SP_EliminarNotaTransaccion ?";
             stmt = conn.prepareCall(sql);
             
-            stmt.setInt(1, note.getID_Nota());
+            stmt.setInt(1, id);
             
-            stmt.executeUpdate();
+            stmt.execute();
         }
         finally
         {
@@ -90,7 +91,7 @@ public class Notas {
         }
     }
     
-    public static Nota[] searchNotes(int ID_Transaccion)throws SQLException{
+    public static ArrayList<Nota> searchNotes(int ID_Transaccion) throws SQLException{
         Connection conn = null;
         CallableStatement stmt = null;
         ResultSet rs = null;
@@ -107,7 +108,7 @@ public class Notas {
                 int idTransaction = rs.getInt("ID_Transaccion");
                 String noteText = rs.getString("Nota");
                 
-                Nota note = new Nota(idTransaction, idNota, noteText);
+                Nota note = new Nota(idNota, idTransaction, noteText);
                 noteList.add(note);
             }
         }finally{
@@ -121,6 +122,6 @@ public class Notas {
                 conn.close();
             }
         }
-        return noteList.toArray(new Nota[noteList.size()]);
+        return noteList;
     }
 }

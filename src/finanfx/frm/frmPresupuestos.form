@@ -29,10 +29,6 @@
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="60" max="-2" attributes="0"/>
-                      <Component id="jScrollPane2" min="-2" pref="443" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="60" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jLabel5" alignment="1" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel1" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -57,8 +53,12 @@
                       <EmptySpace min="18" pref="18" max="-2" attributes="0"/>
                       <Component id="btnRemove" min="-2" max="-2" attributes="0"/>
                   </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
+                      <Component id="jScrollPane2" min="-2" pref="483" max="-2" attributes="0"/>
+                  </Group>
               </Group>
-              <EmptySpace min="-2" pref="68" max="-2" attributes="0"/>
+              <EmptySpace pref="61" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -97,9 +97,9 @@
                   <Component id="btnCancel" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="btnRemove" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="50" max="32767" attributes="0"/>
+              <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
               <Component id="jScrollPane2" min="-2" pref="134" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
+              <EmptySpace pref="61" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -214,14 +214,14 @@
               <Table columnCount="5" rowCount="0">
                 <Column editable="false" title="ID" type="java.lang.Integer"/>
                 <Column editable="false" title="Periodo" type="java.lang.String"/>
-                <Column editable="true" title="Inicio" type="java.lang.Object"/>
+                <Column editable="false" title="Inicio" type="java.lang.Object"/>
                 <Column editable="false" title="Categor&#xed;a" type="java.lang.String"/>
                 <Column editable="false" title="Monto" type="java.lang.String"/>
               </Table>
             </Property>
             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
               <TableColumnModel selectionModel="0">
-                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                <Column maxWidth="-1" minWidth="-1" prefWidth="20" resizable="false">
                   <Title/>
                   <Editor/>
                   <Renderer/>
@@ -241,7 +241,7 @@
                   <Editor/>
                   <Renderer/>
                 </Column>
-                <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="false">
+                <Column maxWidth="-1" minWidth="-1" prefWidth="30" resizable="false">
                   <Title/>
                   <Editor/>
                   <Renderer/>
