@@ -10,9 +10,11 @@
         <group name="Group 20240413-11:20:14">
             <file>file:/C:/Users/raule/OneDrive/Documentos/Utec/ProgramacionIII/FinanFX/src/finanfx/dao/Notas.java</file>
             <file>file:/C:/Users/raule/OneDrive/Documentos/Utec/ProgramacionIII/FinanFX/src/finanfx/frm/frmPerfil.java</file>
+            <file>file:/C:/Users/raule/OneDrive/Documentos/Utec/ProgramacionIII/FinanFX/src/finanfx/frm/frmRegistroUsuario.java</file>
             <file>file:/C:/Users/raule/OneDrive/Documentos/Utec/ProgramacionIII/FinanFX/src/finanfx/data/DatabaseConnection.java</file>
             <file>file:/C:/Users/raule/OneDrive/Documentos/Utec/ProgramacionIII/FinanFX/src/finanfx/frm/frmNotas.java</file>
             <file>file:/C:/Users/raule/OneDrive/Documentos/Utec/ProgramacionIII/FinanFX/src/finanfx/models/Nota.java</file>
+            <file>file:/C:/Users/raule/OneDrive/Documentos/Utec/ProgramacionIII/FinanFX/src/finanfx/frm/frmTransacciones.java</file>
             <file>file:/C:/Users/raule/OneDrive/Documentos/Utec/ProgramacionIII/FinanFX/src/finanfx/state/LoggedInUser.java</file>
         </group>
     </open-files>
